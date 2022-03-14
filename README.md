@@ -1,7 +1,7 @@
 # FishMol
 A python molecular dynamics data analysis tool.
 
-```
+---
                                               ▄▄▄▀
      ○                                    ▄▄███▀              FishMol version 0.0
                ○                       ▄▄█████▀                          ○
@@ -23,6 +23,6 @@ A python molecular dynamics data analysis tool.
                              ▀▀▀███████▀▀▀
                                  ▀████
                                     ▀▀▄
-```
+---
 
-## This 
+## Under development
