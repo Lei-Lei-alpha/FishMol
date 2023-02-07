@@ -12,7 +12,7 @@ def autocorrFFT(x):
 def msd_fft(r):
     N=len(r)
     D=np.square(r).sum(axis=1) 
-    D=np.append(D, 0) 
+    D=np.append(D,0) 
     S2=sum([autocorrFFT(r[:, i]) for i in range(r.shape[1])])
     Q=2*D.sum()
     S1=np.zeros(N)
@@ -21,7 +21,19 @@ def msd_fft(r):
         S1[m]=Q/(N-m)
     return S1-2*S2
 
+
 def traj_proj(pos, vec):
-    pos = np.asarray(pos)
-    vec = np.asarray(vec)
-    return (np.dot(pos, vec.T) / np.linalg.norm(vec, axis = -1)).reshape(len(pos),1)
+    pos = np.array(pos)
+    vec = np.array(vec)
+    return np.dot(pos, vec) / np.linalg.norm(vec)
+
+def msd_1d(r):
+    shifts = np.arange(len(r))
+    msds = np.zeros(r.shape[0])    
+
+    for i, shift in enumerate(shifts):
+        diffs = r[:-shift if shift else None] - r[shift:]
+        sqdist = np.square(diffs)
+        msds[i] = sqdist.mean()
+
+    return msds
