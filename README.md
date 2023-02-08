@@ -25,4 +25,15 @@ A python molecular dynamics data analysis tool.
                                           ▀▀▄
 ---
 
-## Under development
+## Install
+### Requirements
+
+### Install
+The easiest way is to install by `pip`
+```bash
+pip install fishmol
+```
+
+## Usage
+Please refer to examples for usage.
+
