@@ -26,8 +26,11 @@ ascii_fishmol = """\
 """
 
 def main():
+  """
+  Print the fishmol logo when type the command
+  """
     print(ascii_fishmol)
     
 if __name__ == '__main__':
     main()
-
+    

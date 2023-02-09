@@ -17,3 +17,5 @@ def update_progress(progress):
     clear_output(wait = True)
     text = "Progress: [{0}] {1:.1f}%".format( "■" * block + "○" * (bar_length - block), progress * 100)
     print(text)
+
+def to_ase_atoms()
