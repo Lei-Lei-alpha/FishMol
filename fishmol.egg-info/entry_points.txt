@@ -1,0 +1,3 @@
+[console_scripts]
+fishmol = fishmol.__main__:main
+

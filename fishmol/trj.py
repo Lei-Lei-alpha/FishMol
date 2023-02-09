@@ -154,6 +154,11 @@ class Trajectory(object):
                 frame.pos = shift + frame.pos
         return self
     
+
+    def wrap2box(self, center = (0.5, 0.5, 0.5), pretty_translation = False, eps = 1e-7):
+        for frame in self:
+            frame.wrap_pos(center = center, pretty_translation = pretty_translation, eps = eps)
+    
 def frame2atoms(frame, cell = None, basis='Cartesian', pbc = (1,1,1)):
     symbs = frame[:]["symbol"]
     pos = frame[:]["position"]

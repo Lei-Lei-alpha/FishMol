@@ -15,6 +15,7 @@ def render_atoms(atoms):
     Double click on atom to bring the target atom into centre of view
     Roll to zoom in/out
     """
+    atoms = ase_Atoms(symbols = atoms.symbs, positions =  atoms.pos)
     with NamedTemporaryFile('r+', suffix='.html') as ntf:
         atoms.write(ntf.name, format='html')
         ntf.seek(0)
