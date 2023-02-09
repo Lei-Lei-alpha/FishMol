@@ -19,16 +19,17 @@ class Trajectory(object):
     def __init__(self, timestep, data = None, natoms = None, nframes = None, frames = None, index = None, cell = None):
         self.timestep = timestep
         self.data = data
-        self.natoms = natoms
-        self.nframes = nframes
-        self.frames = frames
-        self.index = index
-        self.cell = cell
-
-        if self.index is None:
+        if index is None:
             self.index = ":"
+        else:
+            self.index = index
+        self.cell = cell
         if self.data is not None:
             self.natoms, self.nframes, self.frames = self.read(data)
+        else:
+            self.natoms = natoms
+            self.nframes = nframes
+            self.frames = frames
       
     def __len__(self):
         return len(self.frames)
@@ -59,10 +60,10 @@ class Trajectory(object):
             if step is None:
                 step = 1
             frames = [self.frames[x] for x in range(start, stop, step)]
+            self.timestep *= step
         else:
             raise TypeError("Invalid argument type.")
         return self.__class__(timestep = self.timestep, natoms = self.natoms, nframes = len(frames), frames = frames, index = n, cell = self.cell)
-        # return frames
     
     def read(self, data):
         """
@@ -79,8 +80,8 @@ class Trajectory(object):
         dt = np.dtype([('symbol', np.unicode_, 2), ('position', np.float64, (3,))]) # numpy datatype object, element symbol is string , the position is an array of 3 floats
         # Store each line as a numpy array
         index = self.index
+        nframes = frames.count(frames[0])
         if index == ":" or index == "all":
-            nframes = frames.count(frames[0])
             frames = [np.array((line.split()[0], line.split()[-3:]), dtype=dt)
                       for line in frames if not (line.startswith(header) or line.startswith(prop[0]))]
         
@@ -91,16 +92,16 @@ class Trajectory(object):
             if start is None:
                 start = 0
             if stop is None:
-                stop = frames.count(frames[0])
+                stop = nframes
             if step is None:
                 step = 1
-            frames = frames[start*(natoms+2):stop*(natoms+2):step]
-            nframes = frames.count(frames[0])
+            self.timestep *= step
+            frames = frames[start*(natoms+2):stop*(natoms+2)]
+            nframes = frames.count(header)
             frames = [np.array((line.split()[0], line.split()[-3:]), dtype=dt) 
                       for line in frames if not (line.startswith(header) or line.startswith(prop[0]))]
-
         # split the trajectory into frames
-        frames = [frame2atoms(np.array(frames[x: x + natoms]), cell = self.cell) for x in range(0, len(frames), natoms)]
+        frames = [frame2atoms(np.array(frames[x:x + natoms]), cell = self.cell) for x in range(0, len(frames), natoms)][::step]
         return natoms, nframes, frames
     
     def write(self, filename = None):
@@ -121,10 +122,10 @@ class Trajectory(object):
             pass
 
         with open(filename, "a") as f:
-            for i, frame in enumerate(self):
+            for i, frame in enumerate(self.frames):
                 f.write(str(self.natoms) + f"\n Properties = frame: {i}, t: {i*self.timestep} fs, Cell: {self.cell}\n")
                 np.savetxt(f, np.concatenate(((frame.symbs).reshape((self.natoms,1)), frame.pos), axis=1),
-                           delimiter=',', fmt = "%-2s %s %s %s")
+                           delimiter=',', fmt = "%-2s %-2s %-2s %-2s")
             f.close()
     
     def calib(self, save = False, filename = None):
@@ -154,12 +155,11 @@ class Trajectory(object):
                 frame.pos = shift + frame.pos
         return self
     
-
-    def wrap2box(self, center = (0.5, 0.5, 0.5), pretty_translation = False, eps = 1e-7):
-        for frame in self:
+    def wrap2box(self, center=(0.5, 0.5, 0.5), pretty_translation = False, eps = 1e-7):
+        for frame in self.frames:
             frame.wrap_pos(center = center, pretty_translation = pretty_translation, eps = eps)
     
-def frame2atoms(frame, cell = None, basis='Cartesian', pbc = (1,1,1)):
+def frame2atoms(frame, cell = None, basis='Cartesian'):
     symbs = frame[:]["symbol"]
     pos = frame[:]["position"]
     atoms = Atoms(symbs = symbs, pos = pos, cell = cell, basis = basis)
