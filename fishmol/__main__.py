@@ -1,6 +1,7 @@
 """ Fishmol """
 
 ascii_fishmol = """\
+                                                                                       
                                               ▄▄▄▀                    Welcome!
       ○                                   ▄▄███▀                FishMol version 0.0.1
                ○                       ▄▄█████▀                          ○
