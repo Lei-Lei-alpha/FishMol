@@ -91,7 +91,7 @@ class Trajectory(object):
             if start is None:
                 start = 0
             if stop is None:
-                stop = self.nframes
+                stop = frames.count(frames[0])
             if step is None:
                 step = 1
             frames = frames[start*(natoms+2):stop*(natoms+2):step]
