@@ -19,17 +19,16 @@ class Trajectory(object):
     def __init__(self, timestep, data = None, natoms = None, nframes = None, frames = None, index = None, cell = None):
         self.timestep = timestep
         self.data = data
-        if index is None:
-            self.index = ":"
-        else:
-            self.index = index
+        self.natoms = natoms
+        self.nframes = nframes
+        self.frames = frames
+        self.index = index
         self.cell = cell
+
+        if self.index is None:
+            self.index = ":"
         if self.data is not None:
             self.natoms, self.nframes, self.frames = self.read(data)
-        else:
-            self.natoms = natoms
-            self.nframes = nframes
-            self.frames = frames
       
     def __len__(self):
         return len(self.frames)
