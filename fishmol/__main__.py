@@ -32,5 +32,5 @@ def main():
     print(ascii_fishmol)
     
 if __name__ == '__main__':
-    main()
+  main()
     
