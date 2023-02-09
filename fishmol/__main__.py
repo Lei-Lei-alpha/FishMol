@@ -1,5 +1,7 @@
+""" Fishmol """
+
 ascii_fishmol = """\
-                                              ▄▄▄▀
+                                              ▄▄▄▀                    Welcome!
       ○                                   ▄▄███▀                FishMol version 0.0.1
                ○                       ▄▄█████▀                          ○
                                     ▄▄████████▄                         /
@@ -27,3 +29,4 @@ def main():
     
 if __name__ == '__main__':
     main()
+
