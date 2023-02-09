@@ -1,5 +1,6 @@
 from IPython.display import clear_output
 
+
 def update_progress(progress):
   
     bar_length = 20
@@ -18,4 +19,11 @@ def update_progress(progress):
     text = "Progress: [{0}] {1:.1f}%".format( "■" * block + "○" * (bar_length - block), progress * 100)
     print(text)
 
-def to_ase_atoms()
+# def to_ase_atoms()
+
+def to_sublists(lst, length=2):
+    """
+    Split a list to sublists with specified length: e.g. a = [a,b,c,d,e]
+    to_sublists(a) => [[a,b], [b,c], [c,d], [d,e]] 
+    """
+    return [lst[i:i+length] for i in range(len(lst)+1-length)]
