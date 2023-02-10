@@ -1,7 +1,7 @@
 import mmap
 import numpy as np
 import os
-from .atoms import Atoms
+from fishmol.atoms import Atoms
 
 class Trajectory(object):
     """

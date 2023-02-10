@@ -2,7 +2,7 @@ import numpy as np
 from recordclass import make_dataclass, dataobject
 # from recordclass import make_dataclass, dataobject, astuple, asdict
 import itertools
-from .data import elements
+from fishmol.data import elements
 
 class Atom(np.ndarray):
     """
@@ -495,7 +495,7 @@ class Atoms(np.ndarray):
         """
         Calculates the centre of mass of atoms.
         """
-        masses = np.array([data.elements[symb] for symb in self.symbs])
+        masses = np.array([elements[symb] for symb in self.symbs])
         com = np.dot(masses, self.pos)/masses.sum()
         return com
     
