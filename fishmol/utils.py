@@ -1,6 +1,5 @@
 from IPython.display import clear_output
 
-
 def update_progress(progress):
   
     bar_length = 20
@@ -27,3 +26,8 @@ def to_sublists(lst, length=2):
     to_sublists(a) => [[a,b], [b,c], [c,d], [d,e]] 
     """
     return [lst[i:i+length] for i in range(len(lst)+1-length)]
+
+  def retrieve_symbol(string):
+    """function to remove numbers in a string, so that the atom dict keys can be converted to chemical symbols"""
+    return ''.join([i for i in string if not i.isdigit()])
+  
