@@ -1,4 +1,5 @@
 from IPython.display import clear_output
+import numpy as np
 import fractions as f
 import math
 from scipy.spatial import Voronoi, voronoi_plot_2d, distance
