@@ -1,6 +1,7 @@
 """A range of functions to analyse the trajectory object"""
 
 import numpy as np
+from recordclass import make_dataclass
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from colour import Color
