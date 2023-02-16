@@ -420,7 +420,7 @@ class VRD(object):
         if plot:
             fig, ax = plt.subplots(figsize = (4.2, 3.6))
             ax.plot(self.results.t, self.results.c_t_mean, **kwargs)
-            ax.set_xlabel(r"$t (ps)$")
+            ax.set_xlabel(r"$t$ (ps)")
             ax.set_ylabel(r"$C_t$")
             if log_scale:
                 plt.semilogy()
