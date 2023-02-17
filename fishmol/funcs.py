@@ -354,8 +354,10 @@ class VRD(object):
     skip : int, frames to skip = skip - 1. Determines the sampling step of the Trajectory, eg. skip = 1, use all frames in the Trajectory: skip = 10, skip 9 frames.
     -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     Returns
-    sdf : np.array, scaler distribution function values g.
-    radii : np.array, radii over which g is computed
+    self.results:
+    - t: time calculated
+    - c_t_mean: the average c_t
+    - c_t_error: the error of c_t
     """
     def __init__(self, traj = None, spec = None, timestep = None, num = 2000, sampling = 5, skip = 10):
         results = make_dataclass("Results", "t c_t_mean c_t_error plot")
@@ -384,13 +386,11 @@ class VRD(object):
     def calculate(self, plot = True, log_scale = False, **kwargs):
         if self.traj is not None:
             frame_chunks = to_sublists(self.traj.frames, self.num)[::self.skip]
-            dot_products = []
+            dot_products =[]
             for i, frame_chunk in enumerate(frame_chunks):
                 select = frame_chunk[::self.sampling]
-                # (a * (b)).sum(axis=1)
-                dot_products.append([frame.vecs(*self.spec, absolute = False, normalise = True, mic = True).flatten().dot(
-                    select[0].vecs(*self.spec, absolute = False, normalise = True, mic = True).flatten().T
-                ) for frame in select])
+                dot_products.append([np.diagonal(frame.vecs(*self.spec, absolute = False, normalise = True, mic = True).dot(
+                    select[0].vecs(*self.spec, absolute = False, normalise = True, mic = True).T)) for frame in select])
                 update_progress(i / len(frame_chunks))
             dot_products = np.asarray(dot_products)
             
@@ -428,5 +428,3 @@ class VRD(object):
             self.results.plot = fig
             
         return self.results
-
-
