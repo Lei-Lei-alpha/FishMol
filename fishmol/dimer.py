@@ -49,7 +49,6 @@ class dimers(object):
     """
     def __init__(self, traj, at_g1, at_g2, criteria = [None, None], com = False):
         self.traj = traj
-#         self.traj.wrap2box()
         self.g1 = at_g1
         self.g2 = at_g2
         criteria_dc = make_dataclass("criteria", "distance angle")
