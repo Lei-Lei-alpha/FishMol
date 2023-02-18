@@ -1,3 +1,5 @@
+#! /usr/bin/python3
+
 import numpy as np
 from recordclass import make_dataclass, dataobject
 # from recordclass import make_dataclass, dataobject, astuple, asdict
