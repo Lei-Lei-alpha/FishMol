@@ -305,6 +305,9 @@ class DLDDF(object):
 
                         # More than one pairs in the pool
                         else:
+                            dead_pairs = [x for x in pairs_0 if x != pairs]
+
+                            # Calculate the displacement and lifetime
                             for dead_pair in dead_pairs:
                                 if mic:
                                     dist = mic_dist(self.traj.frames[frame_idx_0][dead_pair].calc_com(), self.traj.frames[frame_idx][dead_pair].calc_com(), cell = self.traj.cell)
