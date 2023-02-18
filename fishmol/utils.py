@@ -3,6 +3,7 @@ import numpy as np
 import fractions as f
 import math
 from scipy.spatial import Voronoi, voronoi_plot_2d, distance
+from recordclass import make_dataclass, dataobject
 
 def update_progress(progress):
   
