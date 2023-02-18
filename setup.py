@@ -14,9 +14,10 @@ setup(
     install_requires=[
     'numpy>=1.14.5',
     'recordclass>=0.17.2',
-    'ase>=3.22.1'
+    'ase>=3.22.1',
+    'iteration_utilities>=0.11.0',
     ],
-    extras_require={'plotting': ['matplotlib>=3.5.1', 'jupyter']},
+    extras_require={'plotting': ['matplotlib>=3.5.1', 'colour>=0.1.5', 'jupyter']},
     entry_points={
     'console_scripts': [
         'fishmol = fishmol.__main__:main',
