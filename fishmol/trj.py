@@ -82,6 +82,7 @@ class Trajectory(object):
         index = self.index
         nframes = frames.count(frames[0])
         if index == ":" or index == "all":
+            step = 1
             frames = [np.array((line.split()[0], line.split()[-3:]), dtype=dt)
                       for line in frames if not (line.startswith(header) or line.startswith(prop[0]))]
         
