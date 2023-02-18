@@ -35,7 +35,7 @@ class dimers(object):
     -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     Arguments
-    at_g1 : list, the indices of the donors of H-bonds or one of the molecules that forms the dimer. For the case of H-bond donors, pass the indices as a list in the following format[D, [H1, H2, ...]] (eg:  for two water molecules whose indices are O: 0, H: 1, H: 2; and O: 8, H: 8, H: 10, the at_g1 should be either [[0, [1, 2]], [8, [9, 10]]].
+    at_g1 : list, the indices of the donors of H-bonds or one of the molecules that forms the dimer. For the case of H-bond donors, pass the indices as a list in the following format[D, [H1, H2, ...]] (eg:  for two water molecules whose indices are O: 0, H: 1, H: 2; and O: 8, H: 9, H: 10, the at_g1 should be [[0, [1, 2]], [8, [9, 10]]].
     at_g2 : list or tuple, the indices of the acceptors or the ther molcecule the forms the dimer.
     criteria : list of geometry criteria for the specified atoms to be regarded as pairs. Accepted format for distance:
         1. number + vdw_sum or number + coval_sum. eg: 1.05vdw_sum or 1.1coval_sum, which keep all pairs whose distances are smaller than their sum of van der Waals radii times 1.05 or their sum of covalency radii times 1.1. Plese set com = False when using this type of distance criteria.
