@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from colour import Color
 from matplotlib.colors import LinearSegmentedColormap
-from fishmol.utils import to_sublists, update_progress
+from fishmol.utils import to_sublists, update_progress, mic_dist
 
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
