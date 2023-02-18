@@ -66,16 +66,19 @@ def to_sublists(lst, length=2):
 def retrieve_symbol(string):
     """function to remove numbers in a string, so that the atom dict keys can be converted to chemical symbols"""
     return ''.join([i for i in string if not i.isdigit()])
-  
-def get_gcd(ints):
-    """
-    Calculate the maximal common divisor of a list of integers
-    """
-    gcd = math.gcd(ints[0],ints[1])
-    for i in range(2,len(ints)):
-        gcd = math.gcd(gcd,ints[i])
-    return gcd
 
+def mic_dist(pos1, pos2, cell = None):
+    dc_cell = make_dataclass("Cell", 'lattice')
+    if isinstance(cell, dataobject):
+        pass
+    else:
+        cell = dc_cell(np.asarray(cell))
+    a2b = pos2 - pos1
+    a2b = cart2xys(a2b, cell)
+    for i in range(3):
+        a2b[i] = a2b[i] - round(a2b[i])
+    a2b = xys2cart(a2b, cell)
+    return np.linalg.norm(a2b)
 
 # Define functions to convert vectors between miller indices and cartesian coordinates
 import fractions as f
