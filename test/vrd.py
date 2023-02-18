@@ -4,6 +4,10 @@ import os
 import subprocess
 import argparse
 import pandas as pd
+from fishmol import trj
+from fishmol import atoms
+from fishmol import utils
+from fishmol import funcs
 from fishmol.cages import c1_at_dict, c2_at_dict
 
 import matplotlib.pyplot as plt
@@ -75,6 +79,7 @@ else: # Cage 2 atom_dicts
     ]
 
 # Load data
+print(f"Reading traj file {cage}-{temperature}.xyz ...")
 traj = trj.Trajectory(timestep = 5, data = f"{cage}-{temperature}.xyz", index = slice(1000, None, 1), cell = cell)
 
 # Water VRD
@@ -84,12 +89,27 @@ water_vrd = pd.DataFrame()
 
 for i, water in enumerate(waters):
     spec = [*water.values()]
-    water_vrd = new_VRD(traj = traj, spec = [[spec[0],], spec[1:]], num = 500, sampling = 10, skip = 2)
+    water_vrd = funcs.VRD(traj = traj, spec = [[spec[0],], spec[1:]], num = 500, sampling = 10, skip = 2)
     results = water_vrd.calculate(plot = False)
-    df[f"t{i+1}"] = pd.Series(results.t)
-    df[f"w{i+1}_u"] = pd.Series(results.c_t_mean[:,0])
-    df[f"w{i+1}_u_e"] = pd.Series(results.c_t_error[:,0])
-    df[f"w{i+1}_v"] = pd.Series(results.c_t_mean[:,1])
-    df[f"w{i+1}_v_e"] = pd.Series(results.c_t_error[:,1])
+    water_vrd[f"t{i+1}"] = pd.Series(results.t)
+    water_vrd[f"w{i+1}_u"] = pd.Series(results.c_t_mean[:,0])
+    water_vrd[f"w{i+1}_u_e"] = pd.Series(results.c_t_error[:,0])
+    water_vrd[f"w{i+1}_v"] = pd.Series(results.c_t_mean[:,1])
+    water_vrd[f"w{i+1}_v_e"] = pd.Series(results.c_t_error[:,1])
 
 water_vrd.to_excel(outdir + f"water_vrd_{temperature}.xlsx")
+
+# TFA VRD
+
+print("Calculating the VRD of TFA molecules ...")
+tfa_vrd = pd.DataFrame()
+
+for i, TFA in enumerate(TFAs):
+    spec = [*TFA.values()]
+    tfa_vrd = funcs.VRD(traj = traj, spec = [[spec[-2],], spec[-1]], num = 5000, sampling = 10, skip = 5)
+    results = tfa_vrd.calculate(plot = False)
+    tfa_vrd[f"t{i+1}"] = pd.Series(results.t)
+    tfa_vrd[f"w{i+1}_u"] = pd.Series(results.c_t_mean[:,0])
+    tfa_vrd[f"w{i+1}_u_e"] = pd.Series(results.c_t_error[:,0])
+
+tfa_vrd.to_excel(outdir + f"TFA_vrd_{temperature}.xlsx")
