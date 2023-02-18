@@ -48,7 +48,7 @@ class dimers(object):
     pair_filter: filter the pairs and find dimers in each frame of the trajectory according to the specified criteria. Returns None, the dimers in each frame of the trajectory are stored in results.dimers. If a filename is specified, the resolved dimer data will be writen in the give file name in .json format.
     """
     def __init__(self, traj, at_g1, at_g2, criteria = [None, None], com = False):
-        self.traj = traj.wrap_pos()
+        self.traj = traj.wrap2pos()
         self.g1 = at_g1
         self.g2 = at_g2
         criteria_dc = make_dataclass("criteria", "distance angle")
