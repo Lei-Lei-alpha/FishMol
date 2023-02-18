@@ -22,6 +22,38 @@ def update_progress(progress):
     text = "Progress: [{0}] {1:.1f}%".format( "■" * block + "○" * (bar_length - block), progress * 100)
     print(text)
 
+def cart2xys(pos, cell):
+    """
+    Cartesian (absolute) position in angstrom to fractional position (scaled position in lattice).
+    """
+    pos = np.asarray(pos)
+    bg = np.linalg.inv(cell.lattice)
+    xyzs = np.tensordot(bg, pos.T, axes=([-1], 0)).T
+    return xyzs
+
+def xys2cart(pos, cell):
+    """
+    Fractional position (scaled position in lattice) to cartesian (absolute) position in angstrom.
+    """
+    pos = np.asarray(pos)
+    xyzr = np.tensordot(cell.lattice, pos.T, axes=([-1], 0)).T
+    return xyzr
+
+def translate_pretty(fractional, pbc):
+    """Translates atoms such that fractional positions are minimized."""
+
+    for i in range(3):
+        if not pbc[i]:
+            continue
+
+        indices = np.argsort(fractional[:, i])
+        sp = fractional[indices, i]
+
+        widths = (np.roll(sp, 1) - sp) % 1.0
+        fractional[:, i] -= sp[np.argmin(widths)]
+        fractional[:, i] %= 1.0
+    return fractional
+    
 # def to_ase_atoms()
 
 def to_sublists(lst, length=2):
