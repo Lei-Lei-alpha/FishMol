@@ -4,7 +4,7 @@ import warnings
 import itertools
 import numpy as np
 from fishmol import trj, data
-from recordclass import  dataobject, astuple, asdict
+from recordclass import make_dataclass, dataobject, astuple, asdict
 from iteration_utilities import deepflatten
 import matplotlib.pyplot as plt
 from colour import Color
