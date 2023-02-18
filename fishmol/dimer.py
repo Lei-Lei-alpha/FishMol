@@ -239,7 +239,7 @@ class DLDDF(object):
     Periodic boundary conditions not implemented in VHCF, due to the fact we cares the absolute displacement in this analysis.
     """
     def __init__(self, traj, dimer_settings = None, nbins = 100, range = np.array([(0.0, 2.0), (0.0, 5.0)])):
-        self.traj = traj
+        self.traj = traj.wrap2box()
         self.dimer_settings = dimer_settings
         settings_dc = make_dataclass("settings", "bins, range")
         self.settings = settings_dc(nbins, range)
