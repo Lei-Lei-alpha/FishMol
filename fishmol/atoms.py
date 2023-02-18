@@ -1,8 +1,11 @@
+#! /usr/bin/python3
+
 import numpy as np
 from recordclass import make_dataclass, dataobject
 # from recordclass import make_dataclass, dataobject, astuple, asdict
 import itertools
 from fishmol.data import elements
+from fishmol.utils import cart2xys, xys2cart, translate_pretty
 
 class Atom(np.ndarray):
     """
@@ -593,35 +596,3 @@ class Atoms(np.ndarray):
     # def autobond(self):
     
     # def at_group(self):
-        
-def cart2xys(pos, cell):
-    """
-    Cartesian (absolute) position in angstrom to fractional position (scaled position in lattice).
-    """
-    pos = np.asarray(pos)
-    bg = np.linalg.inv(cell.lattice)
-    xyzs = np.tensordot(bg, pos.T, axes=([-1], 0)).T
-    return xyzs
-
-def xys2cart(pos, cell):
-    """
-    Fractional position (scaled position in lattice) to cartesian (absolute) position in angstrom.
-    """
-    pos = np.asarray(pos)
-    xyzr = np.tensordot(cell.lattice, pos.T, axes=([-1], 0)).T
-    return xyzr
-
-def translate_pretty(fractional, pbc):
-    """Translates atoms such that fractional positions are minimized."""
-
-    for i in range(3):
-        if not pbc[i]:
-            continue
-
-        indices = np.argsort(fractional[:, i])
-        sp = fractional[indices, i]
-
-        widths = (np.roll(sp, 1) - sp) % 1.0
-        fractional[:, i] -= sp[np.argmin(widths)]
-        fractional[:, i] %= 1.0
-    return fractional

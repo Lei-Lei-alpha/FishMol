@@ -22,6 +22,38 @@ def update_progress(progress):
     text = "Progress: [{0}] {1:.1f}%".format( "■" * block + "○" * (bar_length - block), progress * 100)
     print(text)
 
+def cart2xys(pos, cell):
+    """
+    Cartesian (absolute) position in angstrom to fractional position (scaled position in lattice).
+    """
+    pos = np.asarray(pos)
+    bg = np.linalg.inv(cell.lattice)
+    xyzs = np.tensordot(bg, pos.T, axes=([-1], 0)).T
+    return xyzs
+
+def xys2cart(pos, cell):
+    """
+    Fractional position (scaled position in lattice) to cartesian (absolute) position in angstrom.
+    """
+    pos = np.asarray(pos)
+    xyzr = np.tensordot(cell.lattice, pos.T, axes=([-1], 0)).T
+    return xyzr
+
+def translate_pretty(fractional, pbc):
+    """Translates atoms such that fractional positions are minimized."""
+
+    for i in range(3):
+        if not pbc[i]:
+            continue
+
+        indices = np.argsort(fractional[:, i])
+        sp = fractional[indices, i]
+
+        widths = (np.roll(sp, 1) - sp) % 1.0
+        fractional[:, i] -= sp[np.argmin(widths)]
+        fractional[:, i] %= 1.0
+    return fractional
+    
 # def to_ase_atoms()
 
 def to_sublists(lst, length=2):
@@ -34,20 +66,21 @@ def to_sublists(lst, length=2):
 def retrieve_symbol(string):
     """function to remove numbers in a string, so that the atom dict keys can be converted to chemical symbols"""
     return ''.join([i for i in string if not i.isdigit()])
-  
-def get_gcd(ints):
-    """
-    Calculate the maximal common divisor of a list of integers
-    """
-    gcd = math.gcd(ints[0],ints[1])
-    for i in range(2,len(ints)):
-        gcd = math.gcd(gcd,ints[i])
-    return gcd
 
+def mic_dist(pos1, pos2, cell = None):
+    dc_cell = make_dataclass("Cell", 'lattice')
+    if isinstance(cell, dataobject):
+        pass
+    else:
+        cell = dc_cell(np.asarray(cell))
+    a2b = pos2 - pos1
+    a2b = cart2xys(a2b, cell)
+    for i in range(3):
+        a2b[i] = a2b[i] - round(a2b[i])
+    a2b = xys2cart(a2b, cell)
+    return np.linalg.norm(a2b)
 
 # Define functions to convert vectors between miller indices and cartesian coordinates
-import fractions as f
-import math
 def get_gcd(ints):
     """
     Calculate the maximal common divisor of a list of integers
