@@ -7,12 +7,9 @@ from fishmol import trj, data
 from recordclass import  dataobject, astuple, asdict
 from iteration_utilities import deepflatten
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 from colour import Color
 from matplotlib.colors import LinearSegmentedColormap
 from fishmol.utils import to_sublists, update_progress, mic_dist
-
-import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 
 plt.rcParams.update({
@@ -30,8 +27,6 @@ plt.rcParams.update({
     "legend.frameon": False,
 })
 
-from colour import Color
-from matplotlib.colors import LinearSegmentedColormap
 ramp_colors = ["#ffffff", "#9ecae1", "#2166ac", "#1a9850", "#ffff33", "#b2182b", "#67000d"]
 color_ramp = LinearSegmentedColormap.from_list( 'my_list', [ Color( c1 ).rgb for c1 in ramp_colors ] )
 
