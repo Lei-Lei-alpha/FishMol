@@ -89,8 +89,8 @@ water_vrd = pd.DataFrame()
 
 for i, water in enumerate(waters):
     spec = [*water.values()]
-    water_vrd = funcs.VRD(traj = traj, spec = [[spec[0],], spec[1:]], num = 500, sampling = 10, skip = 2)
-    results = water_vrd.calculate(plot = False)
+    vrd = funcs.VRD(traj = traj, spec = [[spec[0],], spec[1:]], num = 500, sampling = 10, skip = 2)
+    results = vrd.calculate(plot = False)
     water_vrd[f"t{i+1}"] = pd.Series(results.t)
     water_vrd[f"w{i+1}_u"] = pd.Series(results.c_t_mean[:,0])
     water_vrd[f"w{i+1}_u_e"] = pd.Series(results.c_t_error[:,0])
@@ -106,8 +106,8 @@ tfa_vrd = pd.DataFrame()
 
 for i, TFA in enumerate(TFAs):
     spec = [*TFA.values()]
-    tfa_vrd = funcs.VRD(traj = traj, spec = [[spec[-2],], spec[-1]], num = 5000, sampling = 10, skip = 5)
-    results = tfa_vrd.calculate(plot = False)
+    vrd = funcs.VRD(traj = traj, spec = [[spec[-2],], [spec[-1],]], num = 5000, sampling = 10, skip = 5)
+    results = vrd.calculate(plot = False)
     tfa_vrd[f"t{i+1}"] = pd.Series(results.t)
     tfa_vrd[f"w{i+1}_u"] = pd.Series(results.c_t_mean[:,0])
     tfa_vrd[f"w{i+1}_u_e"] = pd.Series(results.c_t_error[:,0])
