@@ -81,8 +81,6 @@ def mic_dist(pos1, pos2, cell = None):
     return np.linalg.norm(a2b)
 
 # Define functions to convert vectors between miller indices and cartesian coordinates
-import fractions as f
-import math
 def get_gcd(ints):
     """
     Calculate the maximal common divisor of a list of integers
