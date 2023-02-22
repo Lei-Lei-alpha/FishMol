@@ -1,6 +1,6 @@
 import itertools
 from recordclass import make_dataclass
-from .data import val_R
+from fishmol.data import val_R
 
 def cluster(atoms, mic = False):
     """
