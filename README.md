@@ -27,6 +27,7 @@ A python molecular dynamics data analysis tool.
 
 ## Install
 ### Requirements
+- python3: >=3.8
 
 ### Install
 The easiest way is to install by `pip`
