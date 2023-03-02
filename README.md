@@ -21,7 +21,7 @@ cd fishmol
 ```bash
 pip install -e ./
 ```
-Run the following command in your terminal to see if fishmol is successfully installed:
+4. Run the following command in your terminal to see if fishmol is successfully installed:
 ```bash
 fishmol
 ```
