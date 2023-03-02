@@ -51,7 +51,9 @@ def cluster(atoms, mic = False):
     symbols = [atoms.symbs[mol].tolist() for mol in mols]
     s_list = [list(set(symb)) for symb in symbols] # list of symbols without duplicates
     counts = [[str(a.count(n)) for n in b] for a,b in zip(symbols,s_list)] # count number of atoms for each symbol
+    for count in counts:
+        if count == 1:
+            count = ""
     symb_num_comb = [list(itertools.chain.from_iterable(zip(a, b))) for a, b in zip(s_list, counts)]
-    formula = ["".join(x) for x in symb_num_comb]
     mols = [molecule(a, b) for a, b in zip(formula, mols)]
     return mols
