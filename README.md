@@ -51,3 +51,13 @@ fishmol
 
 ## Usage
 Please refer to examples for usage.
+  - I/O of trajectory files in `xyz` format
+  - calibration of the trajectory file by fixing the centre of mass
+  - the calculation of mean square displacement (MSD) and diffusion coefficient
+  - the anisotropy of diffusion by calculating the projection of MSD and diffusion coefficient along specified directions
+  - hydrogen bond recognition and lifetime analysis
+  - the reorientation lifetime of vectors
+  - the distribution function of a range of scalars (including the radial distribution function, angular distribution function, dihedral angle distribution function)
+  - 2D combined distribution functions
+  - Van Hove correlation function
+  - dimer lifetime correlation function
