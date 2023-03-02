@@ -383,7 +383,7 @@ class VRD(object):
             raise Exception("Please either specify\n:(i)a Trajectory object and a list of the indices of two atoms\nor\n(ii) a np.array object of vector data and the timestep of the vector data.")
         self.results.t = np.linspace(0, self.t_step * (self.num - 1) / 1000, num = self.num//self.sampling)
         
-    def calculate(self, plot = True, log_scale = False, **kwargs):
+    def calculate(self, plot = True, l = 3, log_scale = False, **kwargs):
         if self.traj is not None:
             frame_chunks = to_sublists(self.traj.frames, self.num)[::self.skip]
             dot_products =[]
@@ -392,11 +392,6 @@ class VRD(object):
                 dot_products.append([np.diagonal(frame.vecs(*self.spec, absolute = False, normalise = True, mic = True).dot(
                     select[0].vecs(*self.spec, absolute = False, normalise = True, mic = True).T)) for frame in select])
                 update_progress(i / len(frame_chunks))
-            dot_products = np.asarray(dot_products)
-            
-            update_progress(1)
-            self.results.c_t_mean = dot_products.mean(axis = 0)
-            self.results.c_t_error = dot_products.std(axis = 0) / (len(frame_chunks))**0.5
             
         # If the vec is an array of vectors without traj
         else:
@@ -407,10 +402,24 @@ class VRD(object):
                 dot_products.append([vecs.dot(vec_chunk[0]) / (np.linalg.norm(vecs) * vecs(vec_chunk[0])) for vecs in vec_chunk])
                 update_progress(i / len(frame_chunks))
         
-        update_progress(1)
         dot_products = np.asarray(dot_products)
-        self.results.c_t_mean = dot_products.mean(axis = 0)
-        self.results.c_t_error = dot_products.std(axis = 0) / (len(frame_chunks))**0.5
+
+        if l == 1:
+            self.results.c_t_mean = dot_products.mean(axis = 0)
+            self.results.c_t_error = dot_products.std(axis = 0) / (len(frame_chunks))**0.5
+        
+        elif l == 2:
+            self.results.c_t_mean = ((3 * (dot_products)**2 - 1)/2).mean(axis = 0)
+            self.results.c_t_error = ((3 * (dot_products)**2 - 1)/2).std(axis = 0) / (len(frame_chunks))**0.5
+
+        elif l == 3:
+            self.results.c_t_mean = ((5 * (dot_products)**3 - 3 * (dot_products.mean(axis = 0)))/2).mean(axis = 0)
+            self.results.c_t_error = (((5 * (dot_products)**3 - 3 * (dot_products.mean(axis = 0)))/2)).std(axis = 0) / (len(frame_chunks))**0.5
+        
+        else:
+            raise ValueError("l = 1, 2 or 3")
+
+        update_progress(1)
         
         # delete temp variable to release some memory
         del frame_chunks, dot_products, select
@@ -421,7 +430,7 @@ class VRD(object):
             fig, ax = plt.subplots(figsize = (4.2, 3.6))
             ax.plot(self.results.t, self.results.c_t_mean, **kwargs)
             ax.set_xlabel(r"$t$ (ps)")
-            ax.set_ylabel(r"$C_t$")
+            ax.set_ylabel(r"$C^3_t$")
             if log_scale:
                 plt.semilogy()
             plt.show()
