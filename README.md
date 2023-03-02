@@ -52,8 +52,8 @@ fishmol
 ## Usage
 Please refer to examples for usage.
   - [I/O of trajectory files in `xyz` format](https://github.com/Lei-Lei-alpha/fishmol/blob/master/examples/trajectory_IO.ipynb)
-  - calibration of the trajectory file by fixing the centre of mass
-  - the calculation of mean square displacement (MSD) and diffusion coefficient
+    - calibration of the trajectory file by fixing the centre of mass
+  - Calculation of mean square displacement (MSD) and diffusion coefficient
   - the anisotropy of diffusion by calculating the projection of MSD and diffusion coefficient along specified directions
   - hydrogen bond recognition and lifetime analysis
   - the reorientation lifetime of vectors
