@@ -213,9 +213,15 @@ class Atoms(np.ndarray):
     @property
     def pbc(self):
         return self._pbc
+    @symbs.setter
+    def symbs(self, symb_lst):
+        self._symbs = symb_lst
     @pos.setter
     def pos(self, pos_lst):
         self._pos = pos_lst
+    @cell.setter
+    def cell(self, cell_arr):
+        self._cell = cell_arr
         
     def __len__(self):
         return len(self.symbs)
