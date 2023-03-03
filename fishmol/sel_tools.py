@@ -8,6 +8,8 @@ def cluster(atoms, mic = False):
     """
     # Make a dataclass to store the info of clusted molecules
     molecule = make_dataclass("Molecule", "formula at_idx")
+    # Wrap atoms into box
+    atoms.wrap_pos()
     # All unique combinations of indices for atoms 
     combinations = list((i, j) for ((i,_),(j,_)) in itertools.combinations(enumerate(list(atoms.symbs)), 2))
     bonded = []
@@ -52,7 +54,7 @@ def cluster(atoms, mic = False):
     s_list = [list(set(symb)) for symb in symbols] # list of symbols without duplicates
     counts = [[str(a.count(n)) for n in b] for a,b in zip(symbols, s_list)] # count number of atoms for each symbol
     symb_num_comb = [list(itertools.chain.from_iterable(zip(a, b))) for a, b in zip(s_list, counts)]
-    # symb_num_comb = [list(filter(('1').__ne__, x)) for x in symb_num_comb] # Drop '1' from chemical formula
+    symb_num_comb = [list(filter(('1').__ne__, x)) for x in symb_num_comb] # Drop '1' from chemical formula
     formula = ["".join(x) for x in symb_num_comb]
     mols = [molecule(a, b) for a, b in zip(formula, mols)]
     return mols
