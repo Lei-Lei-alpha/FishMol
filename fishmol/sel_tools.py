@@ -50,7 +50,7 @@ def cluster(atoms, mic = False):
     # Resolve the formula by counting the number of atoms in each molecule
     symbols = [atoms.symbs[mol].tolist() for mol in mols]
     s_list = [list(set(symb)) for symb in symbols] # list of symbols without duplicates
-    counts = [[str(a.count(n)) for n in b] for a,b in zip(symbols,s_list)] # count number of atoms for each symbol
+    counts = [[str(a.count(n)) for n in b] for a,b in zip(symbols, s_list)] # count number of atoms for each symbol
     symb_num_comb = [list(itertools.chain.from_iterable(zip(a, b))) for a, b in zip(s_list, counts)]
     symb_num_comb = [list(filter(('1').__ne__, x)) for x in symb_num_comb] # Drop '1' from chemical formula
     formula = ["".join(x) for x in symb_num_comb]
