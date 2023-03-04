@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>&lt;no title&gt; &#8212; Fishmol Doc</title>
+    <title>MSD and diffusion coefficient &#8212; Fishmol Doc</title>
   
   
   
@@ -143,7 +143,7 @@ const thebe_selector_output = ".output, .cell_output"
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="#">
-                        <no title>
+                        MSD and diffusion coefficient
                       </a>
                     </li>
                 
@@ -190,10 +190,6 @@ const thebe_selector_output = ".output, .cell_output"
   
 
   
-  <label class="sidebar-toggle secondary-toggle" for="__secondary">
-      <span class="fa-solid fa-outdent"></span>
-  </label>
-  
 
 </div>
   </nav>
@@ -226,7 +222,7 @@ const thebe_selector_output = ".output, .cell_output"
 
                     <li class="nav-item current active">
                       <a class="nav-link nav-internal" href="#">
-                        <no title>
+                        MSD and diffusion coefficient
                       </a>
                     </li>
                 
@@ -298,8 +294,9 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="trajectory_IO.html">I/O of molecular dynamics trajectory</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">MSD and diffusion coefficient</a></li>
 </ul>
 
     </div>
@@ -443,9 +440,7 @@ title="Print to PDF"
       
   </ul>
 </div>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
-            <span class="fa-solid fa-list"></span>
-        </label>
+
     </div>
 </div>
             </div>
@@ -453,66 +448,60 @@ title="Print to PDF"
             
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1><no title></h1>
+    <h1>MSD and diffusion coefficient</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-            </nav>
         </div>
     </div>
 </div>
 
             <article class="bd-article" role="main">
               
-  <div class="cell docutils container">
+  <section class="tex2jax_ignore mathjax_ignore" id="msd-and-diffusion-coefficient">
+<h1>MSD and diffusion coefficient<a class="headerlink" href="#msd-and-diffusion-coefficient" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fishmol</span> <span class="kn">import</span> <span class="n">trj</span><span class="p">,</span> <span class="n">msd</span>
-<span class="kn">from</span> <span class="nn">cage_data</span> <span class="kn">import</span> <span class="n">cage1_info</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>fishmol
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                                       
+                  Welcome!                    ▄▄█▀                  FishMol
+                                          ▄▄███▀                 version 0.0.1
+      ○                                ▄▄█████▀                          ○
+           ○                        ▄▄████████▄                         /
+                                ▄▄▄████████████▄                    ○--○
+         ○                ▄▄▄████████████████████▄▄                     \ 
+                    ▄▄▄██████▀███████████████████████▄▄                  ○--○           ▄
+                ▄▄████████████ ██████████████████████████▄▄             /           ▄▄█▀
+         ○   ▄█████████████████ ████████████████████████████▄▄         ○         ▄███▀
+          ▄██████████▀▀▀████████ ██████████████████████████████▄▄             ▄█████▀
+         ▄████████▀   ○  ▀███████ █████████████████████████████████▄▄      ▄▄█████▀
+         ■▄███████▄      ▄███████ █████████████████████████████████████▄▄▄███████▀
+          ▀█████████▄▄▄█████████ ███████████████████████████████████████████████
+            ▀██████████████████ ████████████████████████████████████████████████▄
+              ▀██████████████▀▄███████████████████████████████████▀▀▀▀▀████████████▄
+                ▀▀█████████▀▄███████████████████████████████▀▀           ▀▀████████▀
+                   ▀▀█████▄████████████████████████▀▀▀▀██▀                 ▀▀████▀
+                        ▀▀▀█████████████████▀▀▀▀        ▀■                    ▀█▀
+                             ▀▀▀███████▀▀
+                                 ▀████
+                                    ▀▀▄                Contact: Lei.Lei@durham.ac.uk
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rcParams</span>
-<span class="kn">from</span> <span class="nn">cycler</span> <span class="kn">import</span> <span class="n">cycler</span>
-<span class="kn">from</span> <span class="nn">colour</span> <span class="kn">import</span> <span class="n">Color</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LinearSegmentedColormap</span>
-
-<span class="c1">#----Colour cycle used----#</span>
-<span class="n">ramp_colours</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#ffffff&quot;</span><span class="p">,</span> <span class="s2">&quot;#9ecae1&quot;</span><span class="p">,</span> <span class="s2">&quot;#2166ac&quot;</span><span class="p">,</span> <span class="s2">&quot;#1a9850&quot;</span><span class="p">,</span> <span class="s2">&quot;#ffff33&quot;</span><span class="p">,</span> <span class="s2">&quot;#b2182b&quot;</span><span class="p">,</span> <span class="s2">&quot;#67000d&quot;</span><span class="p">]</span>
-<span class="n">cdf_cmap</span> <span class="o">=</span> <span class="n">LinearSegmentedColormap</span><span class="o">.</span><span class="n">from_list</span><span class="p">(</span> <span class="s1">&#39;cdf_colour&#39;</span><span class="p">,</span> <span class="p">[</span> <span class="n">Color</span><span class="p">(</span> <span class="n">c1</span> <span class="p">)</span><span class="o">.</span><span class="n">rgb</span> <span class="k">for</span> <span class="n">c1</span> <span class="ow">in</span> <span class="n">ramp_colours</span> <span class="p">]</span> <span class="p">)</span>
-
-<span class="c1">#----Plot style----#</span>
-<span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-    <span class="s2">&quot;font.size&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
-    <span class="s2">&quot;font.family&quot;</span><span class="p">:</span> <span class="s2">&quot;sans-serif&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;lines.markersize&quot;</span><span class="p">:</span> <span class="mf">2.5</span><span class="p">,</span>
-    <span class="s2">&quot;image.cmap&quot;</span><span class="p">:</span> <span class="n">cdf_cmap</span><span class="p">,</span>
-
-    <span class="c1"># &quot;font.sans-serif&quot;: &quot;Arial&quot;,</span>
-    <span class="c1"># &quot;font.weight&quot;: &quot;heavy&quot;,</span>
-    <span class="c1"># &quot;axes.prop_cycle&quot;: cycler(color = plot_colours),</span>
-    <span class="s2">&quot;xtick.labelsize&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
-    <span class="s2">&quot;ytick.labelsize&quot;</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span>
-    <span class="s2">&quot;figure.figsize&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mf">4.2</span><span class="p">,</span><span class="mf">3.6</span><span class="p">),</span>
-    <span class="s2">&quot;figure.subplot.left&quot;</span><span class="p">:</span> <span class="mf">0.21</span><span class="p">,</span>
-    <span class="s2">&quot;figure.subplot.right&quot;</span><span class="p">:</span> <span class="mf">0.96</span><span class="p">,</span>
-    <span class="s2">&quot;figure.subplot.bottom&quot;</span><span class="p">:</span> <span class="mf">0.18</span><span class="p">,</span>
-    <span class="s2">&quot;figure.subplot.top&quot;</span><span class="p">:</span> <span class="mf">0.93</span><span class="p">,</span>
-    <span class="s2">&quot;legend.frameon&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">})</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fishmol</span> <span class="kn">import</span> <span class="n">trj</span><span class="p">,</span> <span class="n">msd</span>
+<span class="kn">from</span> <span class="nn">cage_data</span> <span class="kn">import</span> <span class="n">cage1_info</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">fishmol</span> <span class="kn">import</span> <span class="n">style</span>
 </pre></div>
 </div>
 </div>
@@ -779,6 +768,7 @@ Wall time: 48.5 s
 <p>5 rows × 24 columns</p>
 </div></div></div>
 </div>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -821,22 +811,6 @@ Wall time: 48.5 s
           </div>
           
           
-          
-            <div class="bd-sidebar-secondary bd-toc">
-              
-<div class="toc-item">
-  
-<div class="tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-</div>
-<nav id="bd-toc-nav" class="page-toc">
-    <ul class="simple visible nav section-nav flex-column">
-</ul>
-
-</nav>
-</div>
-
-            </div>
           
           
         </div>
