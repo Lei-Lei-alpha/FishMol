@@ -190,6 +190,10 @@ const thebe_selector_output = ".output, .cell_output"
   
 
   
+  <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+  </label>
+  
 
 </div>
   </nav>
@@ -440,7 +444,9 @@ title="Print to PDF"
       
   </ul>
 </div>
-
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary" data-toggle="tooltip" data-placement="left" title="Toggle secondary sidebar">
+            <span class="fa-solid fa-list"></span>
+        </label>
     </div>
 </div>
             </div>
@@ -453,6 +459,61 @@ title="Print to PDF"
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#import-packages">
+   Import packages
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#import-information-of-the-simulated-system">
+   Import information of the simulated system
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#read-trajectory-data-file">
+   Read trajectory data file
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#calculate-the-centre-of-masses-coms-for-water-molecules">
+   Calculate the centre of masses (CoMs) for water molecules
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-mean-squared-displacement-of-water-molecules">
+     Calculate the mean squared displacement of water molecules
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-the-time-data">
+     Create the time data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-msd-and-d">
+     Calculate the MSD and D
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-average-values-of-msd-and-d">
+     Calculate average values of MSD and D
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plot-the-data">
+   Plot the data
+  </a>
+ </li>
+</ul>
+
+            </nav>
         </div>
     </div>
 </div>
@@ -461,39 +522,8 @@ title="Print to PDF"
               
   <section class="tex2jax_ignore mathjax_ignore" id="msd-and-diffusion-coefficient">
 <h1>MSD and diffusion coefficient<a class="headerlink" href="#msd-and-diffusion-coefficient" title="Permalink to this headline">#</a></h1>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>fishmol
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>                                                                                       
-                  Welcome!                    ▄▄█▀                  FishMol
-                                          ▄▄███▀                 version 0.0.1
-      ○                                ▄▄█████▀                          ○
-           ○                        ▄▄████████▄                         /
-                                ▄▄▄████████████▄                    ○--○
-         ○                ▄▄▄████████████████████▄▄                     \ 
-                    ▄▄▄██████▀███████████████████████▄▄                  ○--○           ▄
-                ▄▄████████████ ██████████████████████████▄▄             /           ▄▄█▀
-         ○   ▄█████████████████ ████████████████████████████▄▄         ○         ▄███▀
-          ▄██████████▀▀▀████████ ██████████████████████████████▄▄             ▄█████▀
-         ▄████████▀   ○  ▀███████ █████████████████████████████████▄▄      ▄▄█████▀
-         ■▄███████▄      ▄███████ █████████████████████████████████████▄▄▄███████▀
-          ▀█████████▄▄▄█████████ ███████████████████████████████████████████████
-            ▀██████████████████ ████████████████████████████████████████████████▄
-              ▀██████████████▀▄███████████████████████████████████▀▀▀▀▀████████████▄
-                ▀▀█████████▀▄███████████████████████████████▀▀           ▀▀████████▀
-                   ▀▀█████▄████████████████████████▀▀▀▀██▀                 ▀▀████▀
-                        ▀▀▀█████████████████▀▀▀▀        ▀■                    ▀█▀
-                             ▀▀▀███████▀▀
-                                 ▀████
-                                    ▀▀▄                Contact: Lei.Lei@durham.ac.uk
-</pre></div>
-</div>
-</div>
-</div>
+<section id="import-packages">
+<h2>Import packages<a class="headerlink" href="#import-packages" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fishmol</span> <span class="kn">import</span> <span class="n">trj</span><span class="p">,</span> <span class="n">msd</span>
@@ -506,10 +536,15 @@ title="Print to PDF"
 </div>
 </div>
 </div>
+</section>
+<section id="import-information-of-the-simulated-system">
+<h2>Import information of the simulated system<a class="headerlink" href="#import-information-of-the-simulated-system" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cage_data</span> <span class="kn">import</span> <span class="n">cage1_info</span>
-
+<span class="c1"># The simulation box</span>
+<span class="n">cell</span> <span class="o">=</span> <span class="n">cage1_info</span><span class="o">.</span><span class="n">cell</span>
+<span class="c1"># Waters is a dict contains the indices of atoms of water molcules</span>
 <span class="n">waters</span> <span class="o">=</span> <span class="n">cage1_info</span><span class="o">.</span><span class="n">waters</span>
 <span class="n">water_indices</span> <span class="o">=</span> <span class="p">[[</span><span class="o">*</span><span class="n">water</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span> <span class="k">for</span> <span class="n">water</span> <span class="ow">in</span> <span class="n">waters</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">water_indices</span><span class="p">)</span>
@@ -522,21 +557,25 @@ title="Print to PDF"
 </div>
 </div>
 </div>
+</section>
+<section id="read-trajectory-data-file">
+<h2>Read trajectory data file<a class="headerlink" href="#read-trajectory-data-file" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-<span class="n">cell</span> <span class="o">=</span> <span class="n">cage1_info</span><span class="o">.</span><span class="n">cell</span>
-<span class="n">traj</span> <span class="o">=</span> <span class="n">trj</span><span class="o">.</span><span class="n">Trajectory</span><span class="p">(</span><span class="n">timestep</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;cage_data/cage1-500K.xyz&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span><span class="p">)</span>
+<span class="c1"># The trajectory is a large file (517 MB)</span>
+<span class="n">traj</span> <span class="o">=</span> <span class="n">trj</span><span class="o">.</span><span class="n">Trajectory</span><span class="p">(</span><span class="n">timestep</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;/nobackup/rhtp48/data_ana/fishmol_examples/cage_data/cage1-500K.xyz&quot;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 45.8 s, sys: 2.61 s, total: 48.4 s
-Wall time: 48.5 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 45.4 s, sys: 1.47 s, total: 46.9 s
+Wall time: 47.1 s
 </pre></div>
 </div>
 </div>
 </div>
+<p>You can retrieve and confirm the simulation cell info</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">traj</span><span class="o">.</span><span class="n">cell</span>
@@ -551,6 +590,7 @@ Wall time: 48.5 s
 </div>
 </div>
 </div>
+<p>A test of <code class="docutils literal notranslate"><span class="pre">calc_com()</span></code> function is working</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">traj</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">water_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">calc_com</span><span class="p">()</span>
@@ -563,9 +603,12 @@ Wall time: 48.5 s
 </div>
 </div>
 </div>
+</section>
+<section id="calculate-the-centre-of-masses-coms-for-water-molecules">
+<h2>Calculate the centre of masses (CoMs) for water molecules<a class="headerlink" href="#calculate-the-centre-of-masses-coms-for-water-molecules" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fishmol.utils</span> <span class="kn">import</span> <span class="n">update_progress</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fishmol.utils</span> <span class="kn">import</span> <span class="n">update_progress</span> <span class="c1"># import the progress bar function</span>
 
 <span class="n">water_coms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">traj</span><span class="o">.</span><span class="n">nframes</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">water_indices</span><span class="p">)))</span>
 
@@ -768,6 +811,318 @@ Wall time: 48.5 s
 <p>5 rows × 24 columns</p>
 </div></div></div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">del</span> <span class="n">water_coms</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="calculate-the-mean-squared-displacement-of-water-molecules">
+<h3>Calculate the mean squared displacement of water molecules<a class="headerlink" href="#calculate-the-mean-squared-displacement-of-water-molecules" title="Permalink to this headline">#</a></h3>
+</section>
+<section id="create-the-time-data">
+<h3>Create the time data<a class="headerlink" href="#create-the-time-data" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start_idx</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">start_idx</span> <span class="o">*</span> <span class="mi">5</span>
+<span class="n">t_end</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">water_com_df</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 5 fs is the interval of traj</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t0</span><span class="p">,</span> <span class="n">t_end</span><span class="p">,</span> <span class="n">num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">water_com_df</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">msd_d_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-the-msd-and-d">
+<h3>Calculate the MSD and D<a class="headerlink" href="#calculate-the-msd-and-d" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">water_indices</span><span class="p">)):</span>
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">water_com_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="p">:</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">])</span>
+    <span class="n">msds</span> <span class="o">=</span> <span class="n">msd</span><span class="o">.</span><span class="n">msd_fft</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    <span class="n">msd_d_df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;water</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_MSD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msds</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">msd_d_df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;water</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msds</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">*</span> <span class="mf">1E-16</span> <span class="o">/</span> <span class="p">(</span><span class="mi">6</span><span class="o">*</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">*</span><span class="mf">1E-15</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">msd_df</span> <span class="o">=</span> <span class="n">msd_d_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">16</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">d_df</span> <span class="o">=</span> <span class="n">msd_d_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">17</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-average-values-of-msd-and-d">
+<h3>Calculate average values of MSD and D<a class="headerlink" href="#calculate-average-values-of-msd-and-d" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_MSD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msd_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;MSD_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msd_df</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="o">**</span><span class="mf">0.5</span>
+<span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_D&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d_df</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;D_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">d_df</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">8</span><span class="o">**</span><span class="mf">0.5</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Save the data</span>
+<span class="n">msd_d_df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="s2">&quot;test/cage1-H2O-MSD-D-500K.xlsx&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="plot-the-data">
+<h2>Plot the data<a class="headerlink" href="#plot-the-data" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># skip the first 5 ps, that the system is still equilibrating</span>
+<span class="n">msd_d_df</span> <span class="o">=</span> <span class="n">msd_d_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1000</span><span class="p">:,:]</span>
+<span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span> <span class="o">-</span><span class="mi">5000</span><span class="p">)</span>
+<span class="n">msd_d_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>t</th>
+      <th>water0_MSD</th>
+      <th>water0_D</th>
+      <th>water1_MSD</th>
+      <th>water1_D</th>
+      <th>water2_MSD</th>
+      <th>water2_D</th>
+      <th>water3_MSD</th>
+      <th>water3_D</th>
+      <th>water4_MSD</th>
+      <th>...</th>
+      <th>water5_MSD</th>
+      <th>water5_D</th>
+      <th>water6_MSD</th>
+      <th>water6_D</th>
+      <th>water7_MSD</th>
+      <th>water7_D</th>
+      <th>Mean_MSD</th>
+      <th>MSD_error</th>
+      <th>Mean_D</th>
+      <th>D_error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1000</th>
+      <td>5.0</td>
+      <td>4.093919</td>
+      <td>0.000014</td>
+      <td>19.722342</td>
+      <td>0.000066</td>
+      <td>2.003004</td>
+      <td>0.000007</td>
+      <td>33.566337</td>
+      <td>0.000112</td>
+      <td>1.458750</td>
+      <td>...</td>
+      <td>19.347635</td>
+      <td>0.000064</td>
+      <td>2.614106</td>
+      <td>0.000009</td>
+      <td>19.172680</td>
+      <td>0.000064</td>
+      <td>12.747347</td>
+      <td>4.198995</td>
+      <td>0.000042</td>
+      <td>0.000014</td>
+    </tr>
+    <tr>
+      <th>1001</th>
+      <td>10.0</td>
+      <td>4.095739</td>
+      <td>0.000014</td>
+      <td>19.746275</td>
+      <td>0.000066</td>
+      <td>2.003836</td>
+      <td>0.000007</td>
+      <td>33.597794</td>
+      <td>0.000112</td>
+      <td>1.458538</td>
+      <td>...</td>
+      <td>19.358398</td>
+      <td>0.000064</td>
+      <td>2.613060</td>
+      <td>0.000009</td>
+      <td>19.178147</td>
+      <td>0.000064</td>
+      <td>12.756473</td>
+      <td>4.202892</td>
+      <td>0.000042</td>
+      <td>0.000014</td>
+    </tr>
+    <tr>
+      <th>1002</th>
+      <td>15.0</td>
+      <td>4.097586</td>
+      <td>0.000014</td>
+      <td>19.770177</td>
+      <td>0.000066</td>
+      <td>2.004774</td>
+      <td>0.000007</td>
+      <td>33.629258</td>
+      <td>0.000112</td>
+      <td>1.458261</td>
+      <td>...</td>
+      <td>19.369117</td>
+      <td>0.000064</td>
+      <td>2.612067</td>
+      <td>0.000009</td>
+      <td>19.183779</td>
+      <td>0.000064</td>
+      <td>12.765627</td>
+      <td>4.206788</td>
+      <td>0.000042</td>
+      <td>0.000014</td>
+    </tr>
+    <tr>
+      <th>1003</th>
+      <td>20.0</td>
+      <td>4.099463</td>
+      <td>0.000014</td>
+      <td>19.794038</td>
+      <td>0.000066</td>
+      <td>2.005816</td>
+      <td>0.000007</td>
+      <td>33.660730</td>
+      <td>0.000112</td>
+      <td>1.457916</td>
+      <td>...</td>
+      <td>19.379795</td>
+      <td>0.000064</td>
+      <td>2.611117</td>
+      <td>0.000009</td>
+      <td>19.189575</td>
+      <td>0.000064</td>
+      <td>12.774806</td>
+      <td>4.210683</td>
+      <td>0.000042</td>
+      <td>0.000014</td>
+    </tr>
+    <tr>
+      <th>1004</th>
+      <td>25.0</td>
+      <td>4.101374</td>
+      <td>0.000014</td>
+      <td>19.817852</td>
+      <td>0.000066</td>
+      <td>2.006957</td>
+      <td>0.000007</td>
+      <td>33.692212</td>
+      <td>0.000112</td>
+      <td>1.457499</td>
+      <td>...</td>
+      <td>19.390432</td>
+      <td>0.000064</td>
+      <td>2.610204</td>
+      <td>0.000009</td>
+      <td>19.195537</td>
+      <td>0.000064</td>
+      <td>12.784008</td>
+      <td>4.214578</td>
+      <td>0.000042</td>
+      <td>0.000014</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 21 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.6</span><span class="p">,</span><span class="mf">3.6</span><span class="p">))</span>
+<span class="n">ax</span>  <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.16</span><span class="p">,</span> <span class="mf">0.685</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+
+<span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#08519c&quot;</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_MSD&quot;</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#525252&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_MSD&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;MSD_error&quot;</span><span class="p">],</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#bdbdbd&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_MSD&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;MSD_error&quot;</span><span class="p">],</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#bdbdbd&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_MSD&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;MSD_error&quot;</span><span class="p">],</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_MSD&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;MSD_error&quot;</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span> <span class="s2">&quot;#d9d9d9&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
+
+<span class="n">linear_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_MSD&quot;</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>  
+<span class="n">linear_model_fn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">linear_model</span><span class="p">)</span> 
+
+<span class="n">x_s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">/</span><span class="mi">1000</span><span class="p">)</span>  
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_s</span><span class="p">,</span><span class="n">linear_model_fn</span><span class="p">(</span><span class="n">x_s</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="n">ls</span> <span class="o">=</span><span class="s2">&quot;-.&quot;</span><span class="p">)</span>
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_D&quot;</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_D&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;D_error&quot;</span><span class="p">],</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#6baed6&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_D&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;D_error&quot;</span><span class="p">],</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#6baed6&quot;</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_D&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;D_error&quot;</span><span class="p">],</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;Mean_D&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">msd_d_df</span><span class="p">[</span><span class="s2">&quot;D_error&quot;</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#9ecae1&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.68</span><span class="p">),</span> <span class="n">xycoords</span> <span class="o">=</span> <span class="s2">&quot;axes fraction&quot;</span><span class="p">,</span>
+            <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.68</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span>
+            <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#525252&quot;</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">0.23</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">),</span> <span class="n">xycoords</span> <span class="o">=</span> <span class="s2">&quot;axes fraction&quot;</span><span class="p">,</span>
+            <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.40</span><span class="p">),</span> <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;axes fraction&#39;</span><span class="p">,</span>
+            <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">&quot;-&gt;&quot;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">))</span>
+
+<span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+<span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">xmin</span> <span class="o">+</span> <span class="mf">0.35</span><span class="o">*</span><span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">),</span> <span class="n">ymin</span> <span class="o">+</span> <span class="mf">0.92</span><span class="o">*</span><span class="p">(</span><span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">),</span> <span class="s2">&quot;</span><span class="si">%.2e</span><span class="s2"> cm$^2$ s$^{-1}$&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">linear_model</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">60000</span><span class="p">),</span> <span class="n">ha</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">va</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;MSD (Å$^2$)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;$t$ (ps)&#39;</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;$D$ (cm$^2$ s$^{-1}$)&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span> <span class="n">labelcolor</span> <span class="o">=</span> <span class="n">color</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;right&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">color</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s1">&#39;sci&#39;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">useMathText</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;test/cage1-ave_msd-d-500K.jpg&quot;</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6745dcb549498ff99adabb8c62e14e0e8b045b92a5a2fcd25c1e0dba0e605946.png" src="_images/6745dcb549498ff99adabb8c62e14e0e8b045b92a5a2fcd25c1e0dba0e605946.png" />
+</div>
+</div>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -811,6 +1166,69 @@ Wall time: 48.5 s
           </div>
           
           
+          
+            <div class="bd-sidebar-secondary bd-toc">
+              
+<div class="toc-item">
+  
+<div class="tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+</div>
+<nav id="bd-toc-nav" class="page-toc">
+    <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#import-packages">
+   Import packages
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#import-information-of-the-simulated-system">
+   Import information of the simulated system
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#read-trajectory-data-file">
+   Read trajectory data file
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#calculate-the-centre-of-masses-coms-for-water-molecules">
+   Calculate the centre of masses (CoMs) for water molecules
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-mean-squared-displacement-of-water-molecules">
+     Calculate the mean squared displacement of water molecules
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#create-the-time-data">
+     Create the time data
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-msd-and-d">
+     Calculate the MSD and D
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-average-values-of-msd-and-d">
+     Calculate average values of MSD and D
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#plot-the-data">
+   Plot the data
+  </a>
+ </li>
+</ul>
+
+</nav>
+</div>
+
+            </div>
           
           
         </div>
