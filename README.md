@@ -50,8 +50,8 @@ fishmol
 
 
 ## Usage
-Please refer to examples for usage.
-  - [I/O of trajectory files in `xyz` format](https://github.com/Lei-Lei-alpha/fishmol/blob/master/examples/trajectory_IO.ipynb)
+Please refer to docs for usage.
+  - [I/O of trajectory files in `xyz` format](https://lei-lei-alpha.github.io/fishmol/trajectory_IO.html)
     - calibration of the trajectory file by fixing the centre of mass
     - Simple view function
     - Simple manipulate of trajectory: filter, select etc
