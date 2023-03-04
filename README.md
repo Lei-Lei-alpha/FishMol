@@ -55,7 +55,7 @@ Please refer to docs for usage.
     - calibration of the trajectory file by fixing the centre of mass
     - Simple view function
     - Simple manipulate of trajectory: filter, select etc
-  - Calculation of mean square displacement (MSD) and diffusion coefficient
+  - [Calculation of mean square displacement (MSD) and diffusion coefficient](https://lei-lei-alpha.github.io/fishmol/MSD_diff_coeff.html)
   - the anisotropy of diffusion by calculating the projection of MSD and diffusion coefficient along specified directions
   - hydrogen bond recognition and lifetime analysis
   - the reorientation lifetime of vectors
