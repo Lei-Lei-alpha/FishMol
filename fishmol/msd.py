@@ -66,9 +66,9 @@ def proj_d(df, num, start_idx = 0, n_theta = 120, n_phi = 120, timestep = None, 
     for i, vec in enumerate(vecs):
         msd_df = np.zeros((len(df), num))
         for j in range(num):
-            temp = np.array(df.iloc[:, 3*j:3*j+3])
-            temp = msd.traj_proj(temp, vec)
-            msds = msd.msd_fft(temp.reshape(len(temp),1))
+            temp = np.array(df.iloc[:, 3*j:3*j + 3])
+            temp = traj_proj(temp, vec)
+            msds = msd_fft(temp.reshape(len(temp), 1))
             msd_df[:, j] = msds
 
         ave_msd = msd_df.mean(axis=1)[1000:]
