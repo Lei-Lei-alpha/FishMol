@@ -56,7 +56,7 @@ Please refer to docs for usage.
     - Simple view function
     - Simple manipulate of trajectory: filter, select etc
   - [Calculation of mean square displacement (MSD) and diffusion coefficient](https://lei-lei-alpha.github.io/fishmol/MSD_diff_coeff.html)
-  - the anisotropy of diffusion by calculating the projection of MSD and diffusion coefficient along specified directions
+  - [the anisotropy of diffusion by calculating the projection of MSD and diffusion coefficient along specified directions](https://lei-lei-alpha.github.io/fishmol/diff_aniso.html)
   - hydrogen bond recognition and lifetime analysis
   - the reorientation lifetime of vectors
   - the distribution function of a range of scalars (including the radial distribution function, angular distribution function, dihedral angle distribution function)
