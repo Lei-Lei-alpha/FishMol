@@ -520,6 +520,11 @@ title="Print to PDF"
      Cage 1 500 K
     </a>
    </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-frequency-of-switch-channels">
+     Calculate the frequency of switch channels
+    </a>
+   </li>
   </ul>
  </li>
 </ul>
@@ -1016,7 +1021,6 @@ title="Print to PDF"
 <span class="n">vor</span> <span class="o">=</span> <span class="n">h_channel</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:])</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">voronoi_plot_2d</span><span class="p">(</span><span class="n">vor</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
-<span class="c1"># ax.scatter([0],[0])</span>
 
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
@@ -1028,7 +1032,61 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/6c4c69532597c542741e9ca67e76ee72f80f33d2e67b51cc996ed7cf84477674.png" src="_images/6c4c69532597c542741e9ca67e76ee72f80f33d2e67b51cc996ed7cf84477674.png" />
+<img alt="_images/f87c562784c3583e8813c78344c35faee446991c633c2dce95e0aabd92c0bc83.png" src="_images/f87c562784c3583e8813c78344c35faee446991c633c2dce95e0aabd92c0bc83.png" />
+</div>
+</div>
+<p>Load CoM data</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">water1</span> <span class="o">=</span> <span class="n">water_com</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">vor</span><span class="o">.</span><span class="n">sort_points</span><span class="p">(</span><span class="n">water1</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">vor</span><span class="o">.</span><span class="n">point_region</span><span class="p">:</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">out</span> <span class="o">==</span> <span class="n">n</span><span class="p">)</span>
+    <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;region</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">water1</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-the-frequency-of-switch-channels">
+<h3>Calculate the frequency of switch channels<a class="headerlink" href="#calculate-the-frequency-of-switch-channels" title="Permalink to this headline">#</a></h3>
+<p>The water molecule stayed inside the diffusion channel as we used a small part of our simulation data</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">calc_freq</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No timestep specified, defauting to 5 fs!
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">voronoi_plot_2d</span><span class="p">(</span><span class="n">vor</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">vor</span><span class="o">.</span><span class="n">point_region</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;region</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;region</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span> <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;region</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">n</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">zorder</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$y$ ($\AA$)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$z$ ($\AA$)&quot;</span><span class="p">)</span>
+
+<span class="c1"># plt.savefig(&quot;test/cage1_voroni_500K_w1.jpg&quot;, dpi = 600)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/54f88788774972951922868549e47273666a77e2d6a96cb447d041af109b7b67.png" src="_images/54f88788774972951922868549e47273666a77e2d6a96cb447d041af109b7b67.png" />
 </div>
 </div>
 </section>
@@ -1116,6 +1174,11 @@ title="Print to PDF"
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#cage-1-500-k">
      Cage 1 500 K
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-frequency-of-switch-channels">
+     Calculate the frequency of switch channels
     </a>
    </li>
   </ul>
