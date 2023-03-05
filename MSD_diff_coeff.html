@@ -57,6 +57,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'MSD_diff_coeff';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -874,6 +876,12 @@ Wall time: 47.1 s
 </section>
 <section id="calculate-the-msd-and-d">
 <h3>Calculate the MSD and D<a class="headerlink" href="#calculate-the-msd-and-d" title="Permalink to this headline">#</a></h3>
+<p>Define a function to calculate the mean squre displacements (MSDs).</p>
+<p>The mean squared displacement (MSD) measures how much particles move over time. There are a number of definitions for the mean squared displacement. The MSDs here are calculated from the most common form, which is defined as:
+$<span class="math notranslate nohighlight">\(
+    MSD(m) = \frac{1}{N_{particles}} \sum_{i=1}^{N_{particles}} \frac{1}{N-m} \sum_{k=0}^{N-m-1} (\vec{r}_i(k+m) - \vec{r}_i(k))^2  
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>r_i(k)<span class="math notranslate nohighlight">\( is the position of particle \)</span>i<span class="math notranslate nohighlight">\( in frame \)</span>k<span class="math notranslate nohighlight">\(. The mean squared displacement is averaged displacements over all windows of length \)</span>m$. The algorithm used is described in <a class="reference external" href="https://doi.org/10.1051/sfn/201112010">calandrini2011nmoldyn</a> which can be realised by the code in <a class="reference external" href="https://stackoverflow.com/questions/34222272/computing-mean-square-displacement-using-python-and-fft">this StackOverflow thread</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">water_indices</span><span class="p">)):</span>
