@@ -4,6 +4,9 @@ import fractions as f
 import math
 from scipy.spatial import Voronoi, voronoi_plot_2d, distance
 from recordclass import make_dataclass, dataobject
+from matplotlib.patches import FancyArrowPatch
+from mpl_toolkits.mplot3d import proj3d
+from mpl_toolkits.mplot3d import Axes3D
 
 def update_progress(progress):
   
@@ -173,7 +176,22 @@ def calc_freq(regions, timestep = None):
         
     return freq
 
-def get_basis(h_path, cell, miller = True):
+
+  class Arrow3D(FancyArrowPatch):
+    """Arrows in 3d anisotropy plot"""
+    def __init__(self, xs, ys, zs, *args, **kwargs):
+        super().__init__((0,0), (0,0), *args, **kwargs)
+        self._verts3d = xs, ys, zs
+
+    def do_3d_projection(self, renderer=None):
+        xs3d, ys3d, zs3d = self._verts3d
+        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)
+        self.set_positions((xs[0],ys[0]),(xs[1],ys[1]))
+
+        return np.min(zs)
+  
+  
+  def get_basis(h_path, cell, miller = True):
     """Identifies two vectors that are perpendicular to the h_path,
     if h_path is in Cartesian coordinates rather than Miller indices, set miller = False"""
     # Create the vector object
