@@ -1,4 +1,5 @@
 import numpy as np
+from fishmol.utils import update_progress, vector, Arrow3D
 
 def autocorrFFT(x):
     N=len(x)
