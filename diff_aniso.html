@@ -514,6 +514,13 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#voroni-method-to-identify-the-diffusion-channel-of-water-molecules">
    Voroni method to identify the diffusion channel of water molecules
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cage-1-500-k">
+     Cage 1 500 K
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -534,8 +541,9 @@ title="Print to PDF"
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">cage_data</span> <span class="kn">import</span> <span class="n">cage1_info</span>
-<span class="kn">from</span> <span class="nn">fishmol.utils</span> <span class="kn">import</span> <span class="n">vector</span><span class="p">,</span> <span class="n">Arrow3D</span>
+<span class="kn">from</span> <span class="nn">fishmol.utils</span> <span class="kn">import</span> <span class="n">vector</span><span class="p">,</span> <span class="n">Arrow3D</span><span class="p">,</span> <span class="n">h_channel</span><span class="p">,</span> <span class="n">calc_freq</span>
 <span class="kn">from</span> <span class="nn">fishmol</span> <span class="kn">import</span> <span class="n">msd</span>
+<span class="kn">from</span> <span class="nn">fishmol</span> <span class="kn">import</span> <span class="n">style</span>
 </pre></div>
 </div>
 </div>
@@ -901,6 +909,129 @@ title="Print to PDF"
 </section>
 <section id="voroni-method-to-identify-the-diffusion-channel-of-water-molecules">
 <h2>Voroni method to identify the diffusion channel of water molecules<a class="headerlink" href="#voroni-method-to-identify-the-diffusion-channel-of-water-molecules" title="Permalink to this headline">#</a></h2>
+<section id="cage-1-500-k">
+<h3>Cage 1 500 K<a class="headerlink" href="#cage-1-500-k" title="Permalink to this headline">#</a></h3>
+<p>The h-path is almost aligned with [100], and the following points used to devide channels</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="p">],</span> <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+<span class="n">cell</span> <span class="o">=</span> <span class="n">cage1_info</span><span class="o">.</span><span class="n">cell</span>
+
+<span class="c1"># The coordination the points will be projected to new coordinate system, where w3 is the h_path with the highest proton diffusivity</span>
+<span class="n">w1</span> <span class="o">=</span> <span class="n">vector</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span><span class="p">)</span>
+<span class="n">w2</span> <span class="o">=</span> <span class="n">vector</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span><span class="p">)</span>
+<span class="n">w3</span> <span class="o">=</span> <span class="n">vector</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;m&quot;</span><span class="p">)</span>
+
+<span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="nb">globals</span><span class="p">()[</span><span class="sa">f</span><span class="s1">&#39;w</span><span class="si">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">array</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">points_arrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">vector</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">cell</span> <span class="o">=</span> <span class="n">cell</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">point_arr</span> <span class="ow">in</span> <span class="n">points_arrs</span><span class="p">:</span>
+    <span class="n">point_arr</span><span class="o">.</span><span class="n">to_cart</span><span class="p">(</span><span class="n">normalise</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="n">point</span><span class="o">.</span><span class="n">array</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points_arrs</span><span class="p">])</span>
+<span class="n">points</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[ 15.75293003, -59.95160187, -30.21085988],
+       [ 14.78102068, -61.162223  , -15.10542994],
+       [ 13.80911134, -62.37284414,   0.        ],
+       [ 12.83720199, -63.58346528,  15.10542994],
+       [ 11.86529264, -64.79408642,  30.21085988],
+       [ 10.8933833 , -66.00470756,  45.31628982],
+       [ 12.12180226, -37.95003268, -45.31628982],
+       [ 11.14989292, -39.16065382, -30.21085988],
+       [ 10.17798357, -40.37127496, -15.10542994],
+       [  9.20607422, -41.58189609,   0.        ],
+       [  8.23416488, -42.79251723,  15.10542994],
+       [  7.26225553, -44.00313837,  30.21085988],
+       [  6.29034618, -45.21375951,  45.31628982],
+       [  7.51876515, -17.15908463, -45.31628982],
+       [  6.54685581, -18.36970577, -30.21085988],
+       [  5.57494646, -19.58032691, -15.10542994],
+       [  4.60303711, -20.79094805,   0.        ],
+       [  3.63112777, -22.00156919,  15.10542994],
+       [  2.65921842, -23.21219032,  30.21085988],
+       [  1.68730907, -24.42281146,  45.31628982],
+       [  2.91572804,   3.63186341, -45.31628982],
+       [  1.94381869,   2.42124228, -30.21085988],
+       [  0.97190935,   1.21062114, -15.10542994],
+       [  0.        ,   0.        ,   0.        ],
+       [ -0.97190935,  -1.21062114,  15.10542994],
+       [ -1.94381869,  -2.42124228,  30.21085988],
+       [ -2.91572804,  -3.63186341,  45.31628982],
+       [ -1.68730907,  24.42281146, -45.31628982],
+       [ -2.65921842,  23.21219032, -30.21085988],
+       [ -3.63112777,  22.00156919, -15.10542994],
+       [ -4.60303711,  20.79094805,   0.        ],
+       [ -5.57494646,  19.58032691,  15.10542994],
+       [ -6.54685581,  18.36970577,  30.21085988],
+       [ -7.51876515,  17.15908463,  45.31628982],
+       [ -6.29034618,  45.21375951, -45.31628982],
+       [ -7.26225553,  44.00313837, -30.21085988],
+       [ -8.23416488,  42.79251723, -15.10542994],
+       [ -9.20607422,  41.58189609,   0.        ],
+       [-10.17798357,  40.37127496,  15.10542994],
+       [-11.14989292,  39.16065382,  30.21085988],
+       [-12.12180226,  37.95003268,  45.31628982],
+       [-11.86529264,  64.79408642, -30.21085988],
+       [-12.83720199,  63.58346528, -15.10542994],
+       [-13.80911134,  62.37284414,   0.        ],
+       [-14.78102068,  61.162223  ,  15.10542994],
+       [-15.75293003,  59.95160187,  30.21085988],
+       [-16.72483938,  58.74098073,  45.31628982]])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">voronoi_plot_2d</span>
+<span class="n">vor</span> <span class="o">=</span> <span class="n">h_channel</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:])</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">voronoi_plot_2d</span><span class="p">(</span><span class="n">vor</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="c1"># ax.scatter([0],[0])</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$y$ ($\AA$)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;$z$ ($\AA$)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/6c4c69532597c542741e9ca67e76ee72f80f33d2e67b51cc996ed7cf84477674.png" src="_images/6c4c69532597c542741e9ca67e76ee72f80f33d2e67b51cc996ed7cf84477674.png" />
+</div>
+</div>
+</section>
 </section>
 </section>
 
@@ -981,6 +1112,13 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#voroni-method-to-identify-the-diffusion-channel-of-water-molecules">
    Voroni method to identify the diffusion channel of water molecules
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#cage-1-500-k">
+     Cage 1 500 K
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
