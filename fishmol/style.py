@@ -21,7 +21,7 @@ cdf_cmap = LinearSegmentedColormap.from_list( 'cdf_colour', [ Color( c1 ).rgb fo
 rcParams.update({
     "font.size": 13,
     "font.family": "sans-serif",
-    "lines.markersize": 2.5,
+    "lines.markersize": 5,
     "image.cmap": cdf_cmap,
 
     # "font.sans-serif": "Arial",
