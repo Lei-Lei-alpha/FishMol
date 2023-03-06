@@ -148,6 +148,20 @@ const thebe_selector_output = ".output, .cell_output"
                       </a>
                     </li>
                 
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="diff_aniso.html">
+                        Diffusion anisotropy
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="H_bond.html">
+                        H bond recognition and lifetime analysis
+                      </a>
+                    </li>
+                
     </ul>
 </nav>
       </div>
@@ -231,6 +245,20 @@ const thebe_selector_output = ".output, .cell_output"
                       </a>
                     </li>
                 
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="diff_aniso.html">
+                        Diffusion anisotropy
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="H_bond.html">
+                        H bond recognition and lifetime analysis
+                      </a>
+                    </li>
+                
     </ul>
 </nav>
       </div>
@@ -302,6 +330,8 @@ const thebe_selector_output = ".output, .cell_output"
         <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">I/O of molecular dynamics trajectory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MSD_diff_coeff.html">MSD and diffusion coefficient</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diff_aniso.html">Diffusion anisotropy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="H_bond.html">H bond recognition and lifetime analysis</a></li>
 </ul>
 
     </div>
@@ -529,6 +559,18 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#filter-trajectory">
    Filter trajectory
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#select-by-atomic-symbol">
+     Select by atomic symbol
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#keep-waters-in-the-trajectory-only">
+     Keep waters in the trajectory only
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -40719,7 +40761,19 @@ Wall time: 228 ms
 </section>
 <section id="filter-trajectory">
 <h2>Filter trajectory<a class="headerlink" href="#filter-trajectory" title="Permalink to this headline">#</a></h2>
-<p>Keep waters in the trajectory only</p>
+<section id="select-by-atomic-symbol">
+<h3>Select by atomic symbol<a class="headerlink" href="#select-by-atomic-symbol" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="p">,</span> <span class="n">atoms</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">at_sel</span><span class="p">([</span><span class="s2">&quot;O&quot;</span><span class="p">,</span><span class="s2">&quot;H&quot;</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="keep-waters-in-the-trajectory-only">
+<h3>Keep waters in the trajectory only<a class="headerlink" href="#keep-waters-in-the-trajectory-only" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">waters</span> <span class="o">=</span> <span class="p">[</span><span class="n">mol</span><span class="o">.</span><span class="n">at_idx</span> <span class="k">for</span> <span class="n">mol</span> <span class="ow">in</span> <span class="n">molecules</span> <span class="k">if</span> <span class="n">mol</span><span class="o">.</span><span class="n">formula</span> <span class="o">==</span> <span class="s2">&quot;H2O&quot;</span><span class="p">]</span>
@@ -41826,6 +41880,7 @@ Wall time: 228 ms
 </div>
 </section>
 </section>
+</section>
 
     <script type="text/x-thebe-config">
     {
@@ -41949,6 +42004,18 @@ Wall time: 228 ms
   <a class="reference internal nav-link" href="#filter-trajectory">
    Filter trajectory
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#select-by-atomic-symbol">
+     Select by atomic symbol
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#keep-waters-in-the-trajectory-only">
+     Keep waters in the trajectory only
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
