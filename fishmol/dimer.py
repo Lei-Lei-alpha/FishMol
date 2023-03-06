@@ -3,32 +3,12 @@ import json
 import warnings
 import itertools
 import numpy as np
-from fishmol import trj, data
+from fishmol import trj, style, data
 from recordclass import make_dataclass, dataobject, astuple, asdict
 from iteration_utilities import deepflatten
 import matplotlib.pyplot as plt
-from colour import Color
-from matplotlib.colors import LinearSegmentedColormap
 from fishmol.utils import to_sublists, update_progress, mic_dist
 from matplotlib.ticker import MultipleLocator
-
-plt.rcParams.update({
-    "font.size": 13,
-    "font.family": "sans-serif",
-    # "font.sans-serif": "Arial",
-    # "font.weight": "heavy",
-    "xtick.labelsize": 13,
-    "ytick.labelsize": 13,
-    "figure.figsize": (4.2,3.6),
-    "figure.subplot.left": 0.21,
-    "figure.subplot.right": 0.96,
-    "figure.subplot.bottom": 0.18,
-    "figure.subplot.top": 0.93,
-    "legend.frameon": False,
-})
-
-ramp_colors = ["#ffffff", "#9ecae1", "#2166ac", "#1a9850", "#ffff33", "#b2182b", "#67000d"]
-color_ramp = LinearSegmentedColormap.from_list( 'my_list', [ Color( c1 ).rgb for c1 in ramp_colors ] )
 
 class dimers(object):
     """The dimers in each frame of a trajectory
