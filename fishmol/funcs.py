@@ -9,9 +9,6 @@ from fishmol import style
 from scipy.optimize import curve_fit
 from scipy.integrate import quad
 
-ramp_colors = ["#ffffff", "#9ecae1", "#2166ac", "#1a9850", "#ffff33", "#b2182b", "#67000d"]
-color_ramp = LinearSegmentedColormap.from_list( 'my_list', [ Color( c1 ).rgb for c1 in ramp_colors ] )
-
 
 # RDF
 class RDF(object):
