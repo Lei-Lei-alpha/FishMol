@@ -4,9 +4,10 @@ import numpy as np
 from recordclass import make_dataclass
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from colour import Color
-from matplotlib.colors import LinearSegmentedColormap
 from fishmol.utils import to_sublists, update_progress
+from fishmol import style
+from scipy.optimize import curve_fit
+from scipy.integrate import quad
 
 ramp_colors = ["#ffffff", "#9ecae1", "#2166ac", "#1a9850", "#ffff33", "#b2182b", "#67000d"]
 color_ramp = LinearSegmentedColormap.from_list( 'my_list', [ Color( c1 ).rgb for c1 in ramp_colors ] )
@@ -341,7 +342,6 @@ class CDF(object):
             
         return self.results
 
-
 # VRD
 class VRD(object):
     """Vector Reorientation Dynamics
@@ -360,7 +360,7 @@ class VRD(object):
     - c_t_error: the error of c_t
     """
     def __init__(self, traj = None, spec = None, timestep = None, num = 2000, sampling = 5, skip = 10):
-        results = make_dataclass("Results", "t c_t_mean c_t_error plot")
+        results = make_dataclass("Results", "t c_t_mean c_t_error t_fit c_t_fit fit_params plot")
         self.results = results
         self.traj = traj
         self.spec = spec
@@ -382,8 +382,22 @@ class VRD(object):
         else:
             raise Exception("Please either specify\n:(i)a Trajectory object and a list of the indices of two atoms\nor\n(ii) a np.array object of vector data and the timestep of the vector data.")
         self.results.t = np.linspace(0, self.t_step * (self.num - 1) / 1000, num = self.num//self.sampling)
-        
-    def calculate(self, plot = True, l = 3, log_scale = False, **kwargs):
+
+
+    def kww_func(t, tau, beta):
+        return np.exp(-(t/tau)**beta)
+
+    def kww_func_fit(x, y, tau = 150, beta = 0.4, maxfev = 10000):
+        """
+        Fit the data with Kohlrausch-Willliams-Watts equation
+        """
+        params,_ = curve_fit(kww_func, x, y, p0=[tau, beta], maxfev = maxfev)
+        x_fit = np.linspace(x.min(), x.max(), num = 200)
+        y_fit = kww_func(x_fit, *params)
+        print("The fitted KWW function paramters are:\nalpha: {0}, beta: {1}".format(*params))
+        return x_fit, y_fit, params
+    
+    def calculate(self, plot = True, l = 3, log_scale = False, fit = True, **kwargs):
         if self.traj is not None:
             frame_chunks = to_sublists(self.traj.frames, self.num)[::self.skip]
             dot_products =[]
@@ -419,18 +433,22 @@ class VRD(object):
         else:
             raise ValueError("l = 1, 2 or 3")
 
+        if fit:
+            self.results.t_fit, self.results.c_t_fit, self.results.fit_params = kww_func_fit(results.t, results.c_t_mean[:,0])
+        
         update_progress(1)
         
         # delete temp variable to release some memory
         del frame_chunks, dot_products, select
         
-        # Plot the results
-        
+        # Plot the results    
         if plot:
             fig, ax = plt.subplots(figsize = (4.2, 3.6))
-            ax.plot(self.results.t, self.results.c_t_mean, **kwargs)
+            ax.scatter(self.results.t, self.results.c_t_mean, **kwargs)
+            if fit:
+                ax.plot(self.results.t_fit, self.results.c_t_fit, color = "#525252", lw = 2)
             ax.set_xlabel(r"$t$ (ps)")
-            ax.set_ylabel(r"$C^3_t$")
+            ax.set_ylabel(f"$C^{l}_t$")
             if log_scale:
                 plt.semilogy()
             plt.show()
