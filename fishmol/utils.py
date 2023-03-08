@@ -5,8 +5,8 @@ import math
 from scipy.spatial import Voronoi, voronoi_plot_2d, distance
 from recordclass import make_dataclass, dataobject
 from matplotlib.patches import FancyArrowPatch
-from mpl_toolkits.mplot3d import proj3d
-from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import proj3d, Axes3D
+from itertools import combinations
 
 def update_progress(progress):
   
@@ -25,6 +25,40 @@ def update_progress(progress):
     clear_output(wait = True)
     text = "Progress: [{0}] {1:.1f}%".format( "■" * block + "○" * (bar_length - block), progress * 100)
     print(text)
+
+
+def to_sublists(lst, length=2):
+    """
+    Split a list to sublists with specified length: e.g. a = [a,b,c,d,e]
+    to_sublists(a) => [[a,b], [b,c], [c,d], [d,e]] 
+    """
+    return [lst[i:i+length] for i in range(len(lst)+1-length)]
+
+def make_comb(a, b):
+    if all([isinstance (a, int), isinstance(b, int)]):
+        comb = (a, b)
+    elif any([isinstance (a, int), isinstance(b, int)]):
+        try:
+            comb = [(a, x) for x in b]
+        except TypeError:
+            comb = [(x, b) for x in a]
+    elif all([isinstance (a, list), isinstance(b, list)]):
+        if all([isinstance(a[0], int), isinstance(b[0], int)]):
+            if a == b:
+                comb = list(combinations(a, 2))
+            else:
+                comb = list(zip(a, b))
+        elif any([isinstance(a[0], list), isinstance(b[0], list)]):
+            try:
+                comb = [list(zip(a, x)) for x in b]
+            except TypeError:
+                comb = [list(zip(x, b)) for x in a]
+            comb = [val for sublist in comb for val in sublist]
+        else:
+            raise ValueError("Valid input of a and b: int, list, list of lists of int.")
+    else:
+        raise ValueError("Valid input of a and b: int, list, list of lists of int.")
+    return comb
 
 def cart2xys(pos, cell):
     """
@@ -60,12 +94,6 @@ def translate_pretty(fractional, pbc):
     
 # def to_ase_atoms()
 
-def to_sublists(lst, length=2):
-    """
-    Split a list to sublists with specified length: e.g. a = [a,b,c,d,e]
-    to_sublists(a) => [[a,b], [b,c], [c,d], [d,e]] 
-    """
-    return [lst[i:i+length] for i in range(len(lst)+1-length)]
 
 def retrieve_symbol(string):
     """function to remove numbers in a string, so that the atom dict keys can be converted to chemical symbols"""
