@@ -345,14 +345,22 @@ class Atoms(np.ndarray):
                     a2b = a2b/np.linalg.norm(a2b)
         return a2b
     
-    def vecs(self, a, b, normalise = False, absolute = True, mic = False):
-        if any([isinstance(a, int),  isinstance(b, int)]):
-            combs = itertools.product(a, b)
-        elif all([isinstance(a, list), isinstance(b, list)]):
-            if len(a) != len(b):
-                combs = itertools.product(a, b)
-            elif len(a) == len(b):
-                combs = zip(a, b)
+    def vecs(self, a = None, b = None, combs = None, normalise = False, absolute = True, mic = False):
+        if all([a is None, b is None, combs is None]):
+            raise ValueError("No atoms specified!")
+        else:
+            if combs is not None:
+                continue
+            else:
+                if any([isinstance(a, int),  isinstance(b, int)]):
+                    combs = itertools.product(a, b)
+                elif all([isinstance(a, list), isinstance(b, list)]):
+                    if len(a) != len(b):
+                        combs = itertools.product(a, b)
+                    elif len(a) == len(b):
+                        combs = zip(a, b)
+                else:
+                    raise ValueError("Unsupported format!")
         a2bs = np.asarray([self.vec(*comb, normalise = normalise, absolute = absolute, mic = mic) for comb in combs])
         return a2bs
             
