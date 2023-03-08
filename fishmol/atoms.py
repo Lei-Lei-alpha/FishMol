@@ -350,7 +350,7 @@ class Atoms(np.ndarray):
             raise ValueError("No atoms specified!")
         else:
             if combs is not None:
-                continue
+                pass
             else:
                 if any([isinstance(a, int),  isinstance(b, int)]):
                     combs = itertools.product(a, b)
