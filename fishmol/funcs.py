@@ -4,7 +4,7 @@ import numpy as np
 from recordclass import make_dataclass
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from fishmol.utils import to_sublists, update_progress
+from fishmol.utils import to_sublists, make_comb, update_progress
 from fishmol import style
 from scipy.optimize import curve_fit
 from scipy.integrate import quad
