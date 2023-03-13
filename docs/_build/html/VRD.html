@@ -60,6 +60,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script>DOCUMENTATION_OPTIONS.pagename = 'VRD';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="H bond recognition and lifetime analysis" href="H_bond.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="docsearch:language" content="None">
   </head>
@@ -160,6 +161,13 @@ const thebe_selector_output = ".output, .cell_output"
                       </a>
                     </li>
                 
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Reorientation lifetime of vectors
+                      </a>
+                    </li>
+                
     </ul>
 </nav>
       </div>
@@ -257,6 +265,13 @@ const thebe_selector_output = ".output, .cell_output"
                       </a>
                     </li>
                 
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="#">
+                        Reorientation lifetime of vectors
+                      </a>
+                    </li>
+                
     </ul>
 </nav>
       </div>
@@ -325,11 +340,12 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <ul class="nav bd-sidenav">
+        <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="trajectory_IO.html">I/O of molecular dynamics trajectory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="MSD_diff_coeff.html">MSD and diffusion coefficient</a></li>
 <li class="toctree-l1"><a class="reference internal" href="diff_aniso.html">Diffusion anisotropy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="H_bond.html">H bond recognition and lifetime analysis</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Reorientation lifetime of vectors</a></li>
 </ul>
 
     </div>
@@ -502,11 +518,40 @@ title="Print to PDF"
   <a class="reference internal nav-link" href="#vector-reorientation-dynamics-vrd-of-water-o-h-bonds">
    Vector reorientation dynamics (VRD) of water O-H bonds
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sepearately-calculate-the-o-h-bonds">
+     Sepearately calculate the O-H bonds
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#average-the-o-h-bonds-of-the-same-water-molecule">
+     Average the O-H bonds of the same water molecule
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-results-by-yourself">
+     Plot the results by yourself
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#vrd-of-trifluoroacetate-ion-c-c-bond">
    VRD of trifluoroacetate ion C-C bond
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-c-c-bond-reorientation-dynamics-in-one-tfa-anion">
+     Calculate the C-C bond reorientation dynamics in one TFA anion
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-average-vrd-of-all-tfa-c-c-bonds">
+     Calculate the average VRD of all TFA C-C bonds
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
@@ -521,7 +566,7 @@ title="Print to PDF"
 <h1>Reorientation lifetime of vectors<a class="headerlink" href="#reorientation-lifetime-of-vectors" title="Permalink to this headline">#</a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fishmol</span> <span class="kn">import</span> <span class="n">trj</span><span class="p">,</span> <span class="n">atoms</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">style</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fishmol</span> <span class="kn">import</span> <span class="n">trj</span><span class="p">,</span> <span class="n">utils</span><span class="p">,</span> <span class="n">funcs</span><span class="p">,</span> <span class="n">style</span>
 <span class="kn">from</span> <span class="nn">cage_data</span> <span class="kn">import</span> <span class="n">cage1_info</span>
 </pre></div>
 </div>
@@ -538,8 +583,8 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 12s, sys: 4.57 s, total: 2min 17s
-Wall time: 2min 17s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2min 17s, sys: 7.39 s, total: 2min 24s
+Wall time: 2min 27s
 </pre></div>
 </div>
 </div>
@@ -547,7 +592,8 @@ Wall time: 2min 17s
 </section>
 <section id="vector-reorientation-dynamics-vrd-of-water-o-h-bonds">
 <h2>Vector reorientation dynamics (VRD) of water O-H bonds<a class="headerlink" href="#vector-reorientation-dynamics-vrd-of-water-o-h-bonds" title="Permalink to this headline">#</a></h2>
-<p>Sepearately calculate the O-H bonds</p>
+<section id="sepearately-calculate-the-o-h-bonds">
+<h3>Sepearately calculate the O-H bonds<a class="headerlink" href="#sepearately-calculate-the-o-h-bonds" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">water_vrd</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">VRD</span><span class="p">(</span><span class="n">traj</span> <span class="o">=</span> <span class="n">traj</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">]],</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">sampling</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
@@ -562,7 +608,9 @@ Wall time: 2min 17s
 <img alt="_images/cfa68e1b3ff38923f5ad8d1a9b3153cd7f116f50b46280f88f099bbe03df255e.png" src="_images/cfa68e1b3ff38923f5ad8d1a9b3153cd7f116f50b46280f88f099bbe03df255e.png" />
 </div>
 </div>
-<p>Average the O-H bonds of the same water molecule</p>
+</section>
+<section id="average-the-o-h-bonds-of-the-same-water-molecule">
+<h3>Average the O-H bonds of the same water molecule<a class="headerlink" href="#average-the-o-h-bonds-of-the-same-water-molecule" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">water_vrd</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">VRD</span><span class="p">(</span><span class="n">traj</span> <span class="o">=</span> <span class="n">traj</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">14</span><span class="p">,</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">]],</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">sampling</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
@@ -577,7 +625,9 @@ Wall time: 2min 17s
 <img alt="_images/9d9e8d3f7938ca30a802f66ceed6171e226127f1dae5c762cdd1e6eb82953b71.png" src="_images/9d9e8d3f7938ca30a802f66ceed6171e226127f1dae5c762cdd1e6eb82953b71.png" />
 </div>
 </div>
-<p>Plot the results by yourself</p>
+</section>
+<section id="plot-the-results-by-yourself">
+<h3>Plot the results by yourself<a class="headerlink" href="#plot-the-results-by-yourself" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -596,24 +646,95 @@ Wall time: 2min 17s
 </div>
 </div>
 </section>
+</section>
 <section id="vrd-of-trifluoroacetate-ion-c-c-bond">
 <h2>VRD of trifluoroacetate ion C-C bond<a class="headerlink" href="#vrd-of-trifluoroacetate-ion-c-c-bond" title="Permalink to this headline">#</a></h2>
+<section id="calculate-the-c-c-bond-reorientation-dynamics-in-one-tfa-anion">
+<h3>Calculate the C-C bond reorientation dynamics in one TFA anion<a class="headerlink" href="#calculate-the-c-c-bond-reorientation-dynamics-in-one-tfa-anion" title="Permalink to this headline">#</a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TFAs</span> <span class="o">=</span> <span class="n">cage1_info</span><span class="o">.</span><span class="n">TFAs</span>
+<span class="n">spec</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">TFAs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">TFAs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
-<span class="n">vrd</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">VRD</span><span class="p">(</span><span class="n">traj</span> <span class="o">=</span> <span class="n">traj</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="p">[[</span><span class="n">spec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">],],</span> <span class="p">[</span><span class="n">spec</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],]],</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">sampling</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">vrd</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">plot</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0, 1, 2, 3, 4, 5, 6]
 </pre></div>
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">spec</span> <span class="k">if</span> <span class="n">traj</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">symbs</span> <span class="o">==</span> <span class="s2">&quot;O&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[3, 4]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vrd</span> <span class="o">=</span> <span class="n">new_VRD</span><span class="p">(</span><span class="n">traj</span> <span class="o">=</span> <span class="n">traj</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">sampling</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">vrd</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">l</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">mean</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fit</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">plot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Progress: [■■■■■■■■■■■■■■■■■■■■] 100.0%
+</pre></div>
+</div>
+<img alt="_images/33ffd0000620866f9c8dda19018dcc273a680f64a4ac85f2ead086aad3b816b7.png" src="_images/33ffd0000620866f9c8dda19018dcc273a680f64a4ac85f2ead086aad3b816b7.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_oxygen</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="n">TFAs</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="o">*</span><span class="n">spec</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span> <span class="k">if</span> <span class="n">traj</span><span class="o">.</span><span class="n">frames</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">x</span><span class="p">]</span><span class="o">.</span><span class="n">symbs</span> <span class="o">==</span> <span class="s2">&quot;O&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">specs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_oxygen</span><span class="p">[::</span><span class="mi">2</span><span class="p">]],</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">all_oxygen</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">]]]</span>
+<span class="n">specs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[3, 10, 132, 139, 261, 268, 390, 397], [4, 11, 133, 140, 262, 269, 391, 398]]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="calculate-the-average-vrd-of-all-tfa-c-c-bonds">
+<h3>Calculate the average VRD of all TFA C-C bonds<a class="headerlink" href="#calculate-the-average-vrd-of-all-tfa-c-c-bonds" title="Permalink to this headline">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vrd</span> <span class="o">=</span> <span class="n">funcs</span><span class="o">.</span><span class="n">VRD</span><span class="p">(</span><span class="n">traj</span> <span class="o">=</span> <span class="n">traj</span><span class="p">,</span> <span class="n">spec</span> <span class="o">=</span> <span class="n">specs</span><span class="p">,</span> <span class="n">num</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">sampling</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">skip</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">vrd</span><span class="o">.</span><span class="n">calculate</span><span class="p">(</span><span class="n">l</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">mean</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">fit</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">plot</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Progress: [■■■■■■■■■■■■■■■■■■■■] 100.0%
+</pre></div>
+</div>
+<img alt="_images/ba56d523bce13858875d51f9f33ee9d8fa655f06881614b63f2207ccac07d96f.png" src="_images/ba56d523bce13858875d51f9f33ee9d8fa655f06881614b63f2207ccac07d96f.png" />
+</div>
+</div>
+</section>
 </section>
 </section>
 
@@ -645,6 +766,13 @@ Wall time: 2min 17s
             <footer class="bd-footer-article">
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+  <a class='left-prev' id="prev-link" href="H_bond.html" title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+          <p class="prev-next-subtitle">previous</p>
+          <p class="prev-next-title">H bond recognition and lifetime analysis</p>
+      </div>
+  </a>
 </div>
             </footer>
             
@@ -670,11 +798,40 @@ Wall time: 2min 17s
   <a class="reference internal nav-link" href="#vector-reorientation-dynamics-vrd-of-water-o-h-bonds">
    Vector reorientation dynamics (VRD) of water O-H bonds
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#sepearately-calculate-the-o-h-bonds">
+     Sepearately calculate the O-H bonds
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#average-the-o-h-bonds-of-the-same-water-molecule">
+     Average the O-H bonds of the same water molecule
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#plot-the-results-by-yourself">
+     Plot the results by yourself
+    </a>
+   </li>
+  </ul>
  </li>
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#vrd-of-trifluoroacetate-ion-c-c-bond">
    VRD of trifluoroacetate ion C-C bond
   </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-c-c-bond-reorientation-dynamics-in-one-tfa-anion">
+     Calculate the C-C bond reorientation dynamics in one TFA anion
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#calculate-the-average-vrd-of-all-tfa-c-c-bonds">
+     Calculate the average VRD of all TFA C-C bonds
+    </a>
+   </li>
+  </ul>
  </li>
 </ul>
 
