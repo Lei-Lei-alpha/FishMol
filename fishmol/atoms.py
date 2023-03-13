@@ -352,7 +352,7 @@ class Atoms(np.ndarray):
             else:
                 try:
                     combs = make_comb(a, b)
-                else:
+                except ValueError:
                     raise ValueError("Unsupported format!")
         a2bs = np.asarray([self.vec(*comb, normalise = normalise, absolute = absolute, mic = mic) for comb in combs])
         return a2bs
