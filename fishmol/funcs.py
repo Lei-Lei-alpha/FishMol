@@ -388,6 +388,7 @@ class VRD(object):
                 combs = make_comb(*self.spec)
             frame_chunks = to_sublists(self.traj.frames, self.num)[::self.skip]
             # n_select_frames = len(frame_chunks[0])
+
             dot_products = np.zeros((len(frame_chunks), len(self.results.t), len(combs)))
             
             for i, frame_chunk in enumerate(frame_chunks):
@@ -455,6 +456,10 @@ class VRD(object):
                 self.results.C_t_fit = np.zeros(200)
                 self.results.fit_params = np.zeros(2)
                 _, self.results.C_t_fit, self.results.fit_params = kww_func_fit(self.results.t, self.results.C_t)
+            elif self.results.C_t.shape[-1] == 1:
+                self.results.C_t_fit = np.zeros(200)
+                self.results.fit_params = np.zeros(2)
+                _, self.results.C_t_fit, self.results.fit_params = kww_func_fit(self.results.t, self.results.C_t.flatten())
             else:
                 self.results.C_t_fit = np.zeros((200, self.results.C_t.shape[-1]))
                 self.results.fit_params = np.zeros((2, self.results.C_t.shape[-1]))
@@ -476,7 +481,10 @@ class VRD(object):
             else:
                 [ax.scatter(self.results.t, self.results.C_t[:,i], **kwargs) for i in range(self.results.C_t.shape[1])]
                 if fit:
-                    [ax.plot(self.results.t_fit, self.results.C_t_fit[:,i], color = "#525252", lw = 2) for i in range(self.results.C_t.shape[1])]
+                    if len(self.results.C_t_fit.shape) == 1:
+                        ax.plot(self.results.t_fit, self.results.C_t_fit, color = "#525252", lw = 2)
+                    else:
+                        [ax.plot(self.results.t_fit, self.results.C_t_fit[:,i], color = "#525252", lw = 2) for i in range(self.results.C_t.shape[1])]
             
             ax.set_xlabel(r"$t$ (ps)")
             ax.set_ylabel(f"$C^{l}_t$")
