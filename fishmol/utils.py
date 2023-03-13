@@ -36,7 +36,7 @@ def to_sublists(lst, length=2):
 
 def make_comb(a, b):
     if all([isinstance (a, int), isinstance(b, int)]):
-        comb = (a, b)
+        comb = [(a, b)]
     elif any([isinstance (a, int), isinstance(b, int)]):
         try:
             comb = [(a, x) for x in b]
