@@ -428,11 +428,11 @@ class VRD(object):
         elif l == 3:
             if mean:
                 dot_products = np.hstack(dot_products)
-                self.results.C_t = ((5 * (dot_products)**3 - 3 * (dot_products.mean(axis = 1)))/2).mean(axis = 1)
-                self.results.C_t_error = (((5 * (dot_products)**3 - 3 * (dot_products.mean(axis = 1)))/2)).std(axis = 1) / (len(frame_chunks))**0.5
+                self.results.C_t = ((5 * (dot_products)**3 - 3 * (dot_products))/2).mean(axis = 1)
+                self.results.C_t_error = (((5 * (dot_products)**3 - 3 * (dot_products))/2)).std(axis = 1) / (len(frame_chunks))**0.5
             else:
-                self.results.C_t = ((5 * (dot_products)**3 - 3 * (dot_products.mean(axis = 0)))/2).mean(axis = 0)
-                self.results.C_t_error = (((5 * (dot_products)**3 - 3 * (dot_products.mean(axis = 0)))/2)).std(axis = 0) / (len(frame_chunks))**0.5
+                self.results.C_t = ((5 * (dot_products)**3 - 3 * (dot_products))/2).mean(axis = 0)
+                self.results.C_t_error = (((5 * (dot_products)**3 - 3 * (dot_products))/2)).std(axis = 0) / (len(frame_chunks))**0.5
         
         else:
             raise ValueError("l = 1, 2 or 3")
