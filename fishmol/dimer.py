@@ -429,3 +429,180 @@ class DLDDF(object):
         update_progress(1)
                 
         return self.results
+
+
+#----Useful functions to make donor-accepter pairs----#
+def find_d_a(atoms_dict):
+    """
+    Creat donor, acceptor dicts from atoms_dicts. Include one water to creat donor, acceptor for specified water.
+    """
+    donors = []
+    acceptors = []
+    for a_dict in atoms_dict:
+        symbols = [retrieve_symbol(key) for key in list(a_dict.keys())] # retrieve chemical symbol from atoms_dict keys
+        if symbols[0] == "F":
+            acceptors += (a_dict,)
+        elif symbols[0] == "N":
+            if len(symbols) == 2:
+                donors += (a_dict,)
+            else:
+                combs = [{"N": a_dict["N"], x: a_dict[x]} for x in list(a_dict.keys()) if x != "N"]
+                donors += (combs[0], combs[1])
+
+        elif symbols[0] == "O":
+            if symbols[0] == symbols[1]:
+                acceptors += (a_dict,)
+            elif len(symbols) == 2 and symbols[0] != symbols[1]:
+                donors += (a_dict,)
+            else:
+                combs = [{"O": a_dict["O"], x: a_dict[x]} for x in list(a_dict.keys()) if x != "O"]
+                donors += (combs[0], combs[1])
+                acceptors += ({"O": a_dict["O"]},)
+    print(f"Done! {len(donors)} donors and {len(donors)} acceptors were found!\n" + "Acceptors:\n", acceptors, "\n Donors:\n", donors)
+    return donors, acceptors
+
+def pair_d_a(donors, acceptors):
+    """
+    Make d_a_pairs and d_h_a_pairs from the donors and acceptors dict.
+    """
+    d_a_pairs = []
+    d_h_a_pairs = []
+    for donor in donors:
+        d_atom = [{x: donor[x]} for x in list(donor.keys()) if not x.startswith("H")]
+        for acceptor in acceptors:
+            keys = list(acceptor.keys())
+
+            if len(keys) == 1:
+                symbol = list(d_atom[0].keys())[0]
+                if symbol == "O" and d_atom[0][symbol] == acceptor[keys[0]]: # exclude combinations where donor and acceptor are the same oxygen atom.
+                    print(f"Donor and acceptor is the same atom: {symbol} {acceptor[keys[0]]}, skipped.")
+                    continue
+                else:
+                    d_a_pairs += [[d_atom[0], acceptor],]
+                    d_h_a_pairs += [[donor, acceptor],]
+            else:
+                for key in keys:
+                    d_a_pairs += [[d_atom[0], {key: acceptor[key]}],]
+                    d_h_a_pairs += [[donor, {key: acceptor[key]}],]
+    print(f"Unique donoar-acceptor/donoar-hydrogen-acceptor combinations: {len(d_a_pairs)}")
+    print(f"Sample donor-acceptor pair: {d_a_pairs[0]}\nSample donor-hydrogen-acceptor pair: {d_h_a_pairs[0]}")
+    return d_a_pairs, d_h_a_pairs
+
+def res_h(d_a_pairs, d_h_a_pairs, traj):
+    """
+    Calculates the H-bond information in each frame of the trajectory.
+    """
+    results = []
+    for i, frame in enumerate(traj.frames):
+        hbonds = [] #list to store all hbonds in current frame
+        for d_a_pair, d_h_a_pair in zip(d_a_pairs, d_h_a_pairs):
+            # Sum of van der Waals radii
+            symbols = [list(item.keys()) for item in d_a_pair]
+            symbols = [item for sublist in symbols for item in sublist] # flatten the list of lists
+            symbols = [retrieve_symbol(symbol) for symbol in symbols] # Remove numbers and get chemical symbol from atoms_dict to be ready to pass to the vdW radii dict
+            vdW_sum = data.vdW_R[symbols[0]] + data.vdW_R[symbols[1]]
+
+            # not a H-bond of D-A distance is greater than their vdW radii times 1.02, 1.02 to take bond length change during MD simulation.
+            r_d_a = frame.dist(*d_a_pair[0].values(), *d_a_pair[1].values(), mic = True) # calculate the D-A distance
+            if r_d_a <= 1.02 * vdW_sum:
+                # calculate the D-H⋅⋅⋅A angle
+                d_h_a_ang = frame.angle(*d_h_a_pair[0].values(), *d_h_a_pair[1].values(), mic = True)  # D-H···A angle               
+                d_h = frame.dist(*d_h_a_pair[0].values(), mic = True) # calculate the D-H length
+
+                # the D-H⋅⋅⋅A angle criteria used: the D-H⋅⋅⋅A angle is close to a right angle refer to the D-H⋅⋅⋅A angle - R(D⋅⋅⋅A) plot
+                # an angle range is included considering the oscillation of bond lenghth and anlgle
+                if d_h_a_ang >= (np.rad2deg(np.arctan2(r_d_a, d_h)) + 180)*3/8:
+                # if d_h_a_ang >= 90:
+                    # Store current H-bond
+                    hbonds.append(
+                            {
+                                "donor": d_h_a_pair[0],
+                                "acceptor": d_h_a_pair[1],
+                                "R(D-A)": r_d_a,
+                                "DHA_ang": d_h_a_ang,
+                                "r(D-H)": d_h,
+                            }
+                    )
+        results.append({f"frame": i, "n_hbonds": len(hbonds), "hbonds": hbonds})
+        update_progress(i/len(traj.frames))
+    return results
+
+
+def bi_exp(t, amp1, tau1, tau2):
+    return amp1*np.exp(-t/tau1) + (1-amp1)*np.exp(-t/tau2)
+
+
+def bi_exp_fit(x, y, amp1 = 0.5, tau1 = 100, tau2 = 150):
+    """
+    Fit the data with biexponential function
+    """
+    params,_ = curve_fit(bi_exp, x, y, p0=[amp1, tau1, tau2])
+    x_fit = np.linspace(x.min(), x.max(), num = 200)
+    y_fit = bi_exp(x_fit, *params)
+    print("The fitted biexponential function paramters are:\nA: {0}, tau1: {1}, tau2: {2}".format(*params))
+    return x_fit, y_fit, params
+
+def calc_tau(amp1, tau1, tau2):
+    """
+    Calculates the H-bond lifetime by integrating the biexponential function.
+    """
+    def function(x):
+        return amp1*np.exp(-x/tau1) + (1 - amp1)*np.exp(-x/tau2)
+
+    res, err = quad(function, 0, np.inf)
+    print(f"The H-bond lifetime is {res} ps.")
+    return res
+
+def auto_cor(data = "hbonds.json", nframes = 1000, skip = 100, index = ":", timestep = None):
+    """
+    Calculates the autocorrelation function of H-bonds from a trajectory.
+    """
+    # Opening JSON data file containing the hbonds information
+    f = open(data)
+
+    # returns JSON object as a dictionary
+    if index == ":":
+        frames = json.load(f)
+        
+    elif isinstance(index, int):
+        frames = json.load(f)[:index]
+        
+    elif isinstance(index, list):
+        frames = json.load(f)[index[0]:index[1]]
+    
+    frame_chunks = to_sublists(frames, nframes)
+
+    C_ts = np.zeros((len(frame_chunks), nframes//skip))
+    
+    for i, frame_chunk in enumerate(frame_chunks):
+        select = frame_chunk[::skip]
+        nbonds_0 = nbonds = select[0]["n_hbonds"] # hij(t0)
+        if nbonds_0 == 0: # skip if there is no hydrogen bonds in the first frame of the selected frames
+            pass
+        else:
+            # store the donor and acceptor dicts in to a list
+            hbonds_0 = select[0]["hbonds"]
+            # for hbond_0 in hbonds_0:
+            d_a_list_0 = [[hbonds_0[x]["donor"], hbonds_0[x]["acceptor"]] for x in range(len(hbonds_0))] # start point of h-bonds
+            C_t = []
+            for frame in select:
+                hbonds = frame["hbonds"]
+                # Make a list of donors and acceptors for each frame
+                d_a_list = [[hbonds[x]["donor"], hbonds[x]["acceptor"]] for x in range(len(hbonds))] # start point of h-bonds
+
+                # Iterate through the elements in hbonds_0, if any hbond breaks (not in the list of hbonds in a frame), remove the hbond from d_a_list_0, and nbonds decreases by one
+                for k, item in enumerate(d_a_list_0):
+                    if item not in d_a_list:
+                        d_a_list_0.pop(k)
+                        nbonds -= 1
+                # Calculate the C(t)
+                C_t.append(nbonds*nbonds_0/nbonds_0**2)
+        C_ts[i] = np.array(C_t)
+    # Calculate the mean and error of C_ts
+    C_ts_mean = C_ts.mean(axis = 0)
+    C_ts_error = C_ts.std(axis = 0)/(len(frames)//nframes)**0.5
+    if timestep is None:
+        timestep = 5
+    t_end = 0 + (nframes - 1)*timestep # 5 fs is the interval of traj
+    t = np.linspace(0, t_end, num = nframes//skip)/1000
+    return t, C_ts_mean, C_ts_error

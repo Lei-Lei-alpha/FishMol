@@ -1,11 +1,9 @@
-#! /usr/bin/python3
-
 import numpy as np
+import itertools
 from recordclass import make_dataclass, dataobject
 # from recordclass import make_dataclass, dataobject, astuple, asdict
-import itertools
 from fishmol.data import elements
-from fishmol.utils import cart2xys, xys2cart, translate_pretty
+from fishmol.utils import make_comb, cart2xys, xys2cart, translate_pretty
 
 class Atom(np.ndarray):
     """
@@ -345,14 +343,17 @@ class Atoms(np.ndarray):
                     a2b = a2b/np.linalg.norm(a2b)
         return a2b
     
-    def vecs(self, a, b, normalise = False, absolute = True, mic = False):
-        if any([isinstance(a, int),  isinstance(b, int)]):
-            combs = itertools.product(a, b)
-        elif all([isinstance(a, list), isinstance(b, list)]):
-            if len(a) != len(b):
-                combs = itertools.product(a, b)
-            elif len(a) == len(b):
-                combs = zip(a, b)
+    def vecs(self, a = None, b = None, combs = None, normalise = False, absolute = True, mic = False):
+        if all([a is None, b is None, combs is None]):
+            raise ValueError("No atoms specified!")
+        else:
+            if combs is not None:
+                pass
+            else:
+                try:
+                    combs = make_comb(a, b)
+                except ValueError:
+                    raise ValueError("Unsupported format!")
         a2bs = np.asarray([self.vec(*comb, normalise = normalise, absolute = absolute, mic = mic) for comb in combs])
         return a2bs
             
@@ -388,12 +389,12 @@ class Atoms(np.ndarray):
         Returns
         out : float, the distance between a and b Atoms.
         """
-        pairs = list(itertools.product(at_g1, at_g2))
+        pairs = make_comb(at_g1, at_g2)
         # pairs = [[pair[0], pair[1]] for pair in pairs if not pair[0] == pair[1]]
         distances = np.zeros(len(pairs))
         
         for i, pair in enumerate(pairs):
-            distances[i] = self.dist(pair[0], pair[1], mic = mic)
+            distances[i] = self.dist(*pair, mic = mic)
 
         if cutoff is not None:
             mask = np.where(distances <= cutoff)

@@ -4,12 +4,10 @@ import numpy as np
 from recordclass import make_dataclass
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from colour import Color
-from matplotlib.colors import LinearSegmentedColormap
-from fishmol.utils import to_sublists, update_progress
-
-ramp_colors = ["#ffffff", "#9ecae1", "#2166ac", "#1a9850", "#ffff33", "#b2182b", "#67000d"]
-color_ramp = LinearSegmentedColormap.from_list( 'my_list', [ Color( c1 ).rgb for c1 in ramp_colors ] )
+from fishmol.utils import to_sublists, make_comb, update_progress
+from fishmol import style
+from scipy.optimize import curve_fit
+from scipy.integrate import quad
 
 
 # RDF
@@ -341,7 +339,6 @@ class CDF(object):
             
         return self.results
 
-
 # VRD
 class VRD(object):
     """Vector Reorientation Dynamics
@@ -356,11 +353,11 @@ class VRD(object):
     Returns
     self.results:
     - t: time calculated
-    - c_t_mean: the average c_t
-    - c_t_error: the error of c_t
+    - C_t: the average c_t
+    - C_t_error: the error of c_t
     """
     def __init__(self, traj = None, spec = None, timestep = None, num = 2000, sampling = 5, skip = 10):
-        results = make_dataclass("Results", "t c_t_mean c_t_error plot")
+        results = make_dataclass("Results", "t C_t C_t_error t_fit C_t_fit fit_params plot")
         self.results = results
         self.traj = traj
         self.spec = spec
@@ -382,55 +379,116 @@ class VRD(object):
         else:
             raise Exception("Please either specify\n:(i)a Trajectory object and a list of the indices of two atoms\nor\n(ii) a np.array object of vector data and the timestep of the vector data.")
         self.results.t = np.linspace(0, self.t_step * (self.num - 1) / 1000, num = self.num//self.sampling)
-        
-    def calculate(self, plot = True, l = 3, log_scale = False, **kwargs):
+    
+    def calculate(self, l = 3, mean = True, fit = False, plot = True, log_scale = False, **kwargs):
         if self.traj is not None:
+            if any([self.spec[0] is None, self.spec[1] is None]):
+                raise ValueError("Please specify atom groups ")
+            else:
+                combs = make_comb(*self.spec)
             frame_chunks = to_sublists(self.traj.frames, self.num)[::self.skip]
-            dot_products =[]
+            # n_select_frames = len(frame_chunks[0])
+
+            dot_products = np.zeros((len(frame_chunks), len(self.results.t), len(combs)))
+            
             for i, frame_chunk in enumerate(frame_chunks):
                 select = frame_chunk[::self.sampling]
-                dot_products.append([np.diagonal(frame.vecs(*self.spec, absolute = False, normalise = True, mic = True).dot(
-                    select[0].vecs(*self.spec, absolute = False, normalise = True, mic = True).T)) for frame in select])
+                dot_products[i,:] = np.asarray([np.diagonal(frame.vecs(combs = combs, absolute = False, normalise = True, mic = True).dot(
+                    select[0].vecs(combs = combs, absolute = False, normalise = True, mic = True).T)) for frame in select])
                 update_progress(i / len(frame_chunks))
             
         # If the vec is an array of vectors without traj
         else:
             vec_chunks = to_sublists(self.spec, self.num)[::self.skip]
-            dot_products = []
+            dot_products = np.zeros((len(frame_chunks), len(self.results.t), len(combs)))
             for i, vec_chunk in len(vec_chunks):
                 select = vec_chunk[::self.sampling]
-                dot_products.append([vecs.dot(vec_chunk[0]) / (np.linalg.norm(vecs) * vecs(vec_chunk[0])) for vecs in vec_chunk])
+                dot_products[i] = np.asarray([vecs.dot(vec_chunk[0]) / (np.linalg.norm(vecs) * vecs(vec_chunk[0])) for vecs in vec_chunk])
                 update_progress(i / len(frame_chunks))
-        
-        dot_products = np.asarray(dot_products)
 
+        
         if l == 1:
-            self.results.c_t_mean = dot_products.mean(axis = 0)
-            self.results.c_t_error = dot_products.std(axis = 0) / (len(frame_chunks))**0.5
+            if mean:
+                dot_products = np.hstack(dot_products)
+                self.results.C_t = dot_products.mean(axis = 1)
+                self.results.C_t_error = dot_products.std(axis = 1) / (len(frame_chunks))**0.5
+            else:
+                self.results.C_t = dot_products.mean(axis = 0)
+                self.results.C_t_error = dot_products.std(axis = 0) / (len(frame_chunks))**0.5
         
         elif l == 2:
-            self.results.c_t_mean = ((3 * (dot_products)**2 - 1)/2).mean(axis = 0)
-            self.results.c_t_error = ((3 * (dot_products)**2 - 1)/2).std(axis = 0) / (len(frame_chunks))**0.5
+            if mean:
+                dot_products = np.hstack(dot_products)
+                self.results.C_t = ((3 * (dot_products)**2 - 1)/2).mean(axis = 1)
+                self.results.C_t_error = ((3 * (dot_products)**2 - 1)/2).std(axis = 1) / (len(frame_chunks))**0.5
+            else:
+                self.results.C_t = ((3 * (dot_products)**2 - 1)/2).mean(axis = 0)
+                self.results.C_t_error = ((3 * (dot_products)**2 - 1)/2).std(axis = 0) / (len(frame_chunks))**0.5
 
         elif l == 3:
-            self.results.c_t_mean = ((5 * (dot_products)**3 - 3 * (dot_products.mean(axis = 0)))/2).mean(axis = 0)
-            self.results.c_t_error = (((5 * (dot_products)**3 - 3 * (dot_products.mean(axis = 0)))/2)).std(axis = 0) / (len(frame_chunks))**0.5
+            if mean:
+                dot_products = np.hstack(dot_products)
+                self.results.C_t = ((5 * (dot_products)**3 - 3 * (dot_products))/2).mean(axis = 1)
+                self.results.C_t_error = (((5 * (dot_products)**3 - 3 * (dot_products))/2)).std(axis = 1) / (len(frame_chunks))**0.5
+            else:
+                self.results.C_t = ((5 * (dot_products)**3 - 3 * (dot_products))/2).mean(axis = 0)
+                self.results.C_t_error = (((5 * (dot_products)**3 - 3 * (dot_products))/2)).std(axis = 0) / (len(frame_chunks))**0.5
         
         else:
             raise ValueError("l = 1, 2 or 3")
 
+        def kww_func_fit(x, y, tau = 1, beta = 0.4, maxfev = 10000):
+            """
+            Fit the data with Kohlrausch-Willliams-Watts equation
+            """
+            def kww_func(t, tau, beta):
+                return np.exp(-(t/tau)**beta)
+
+            params,_ = curve_fit(kww_func, x, y, p0=[tau, beta], maxfev = maxfev)
+            x_fit = np.linspace(x.min(), x.max(), num = 200)
+            y_fit = kww_func(x_fit, *params)
+            print("The fitted KWW function paramters are:\nalpha: {0}, beta: {1}".format(*params))
+            return x_fit, y_fit, params
+        
+        if fit:
+            self.results.t_fit = np.linspace(self.results.t.min(), self.results.t.max(), num = 200)
+            if len(self.results.C_t.shape) == 1:
+                self.results.C_t_fit = np.zeros(200)
+                self.results.fit_params = np.zeros(2)
+                _, self.results.C_t_fit, self.results.fit_params = kww_func_fit(self.results.t, self.results.C_t)
+            elif self.results.C_t.shape[-1] == 1:
+                self.results.C_t_fit = np.zeros(200)
+                self.results.fit_params = np.zeros(2)
+                _, self.results.C_t_fit, self.results.fit_params = kww_func_fit(self.results.t, self.results.C_t.flatten())
+            else:
+                self.results.C_t_fit = np.zeros((200, self.results.C_t.shape[-1]))
+                self.results.fit_params = np.zeros((2, self.results.C_t.shape[-1]))
+                for i in range(self.results.C_t.shape[-1]):
+                    _, self.results.C_t_fit[:, i], self.results.fit_params[i] = kww_func_fit(self.results.t, self.results.C_t[:, i])
+        
         update_progress(1)
         
         # delete temp variable to release some memory
         del frame_chunks, dot_products, select
         
-        # Plot the results
-        
+        # Plot the results    
         if plot:
             fig, ax = plt.subplots(figsize = (4.2, 3.6))
-            ax.plot(self.results.t, self.results.c_t_mean, **kwargs)
+            if len(self.results.C_t.shape) == 1:
+                ax.scatter(self.results.t, self.results.C_t, **kwargs)
+                if fit:
+                    ax.plot(self.results.t_fit, self.results.C_t_fit, color = "#525252", lw = 2)
+            else:
+                [ax.scatter(self.results.t, self.results.C_t[:,i], **kwargs) for i in range(self.results.C_t.shape[1])]
+                if fit:
+                    if len(self.results.C_t_fit.shape) == 1:
+                        ax.plot(self.results.t_fit, self.results.C_t_fit, color = "#525252", lw = 2)
+                    else:
+                        [ax.plot(self.results.t_fit, self.results.C_t_fit[:,i], color = "#525252", lw = 2) for i in range(self.results.C_t.shape[1])]
+            
             ax.set_xlabel(r"$t$ (ps)")
             ax.set_ylabel(f"$C^{l}_t$")
+            
             if log_scale:
                 plt.semilogy()
             plt.show()

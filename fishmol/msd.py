@@ -1,4 +1,5 @@
 import numpy as np
+from fishmol.utils import update_progress, vector, Arrow3D
 
 def autocorrFFT(x):
     N=len(x)
@@ -37,3 +38,44 @@ def msd_1d(r):
         msds[i] = sqdist.mean()
 
     return msds
+
+
+def proj_d(df, num, start_idx = 0, n_theta = 120, n_phi = 120, timestep = None, filename = None, plot = False, figname =None):
+    """
+    Calculates the MSD and D alogn the direction specified by vec.
+    """
+    # A spherical mesh of vectors
+    phi = np.linspace(-np.pi, np.pi, num = n_phi)
+    theta = np.linspace(-np.pi/2, np.pi, num = n_theta)
+
+    phi, theta = np.meshgrid(phi, theta)
+    
+    x = np.sin(phi) * np.sin(theta)
+    y = np.sin(phi) * np.cos(theta)
+    z = np.cos(phi)
+    
+    vecs = np.stack((x.flatten(), y.flatten(), z.flatten()), axis = 1) 
+    ave_D = np.zeros(len(vecs))
+    
+    if timestep is None:
+        timestep = 5 # defauting timestep of trajectory to 5 fs
+    t0 = start_idx * timestep
+    t_end = t0 + timestep * (len(df) - 1) 
+    t = np.linspace(t0, t_end, num = len(df))
+    t = t[1000:] - 5000
+    
+    for i, vec in enumerate(vecs):
+        msd_df = np.zeros((len(df), num))
+        for j in range(num):
+            temp = np.array(df.iloc[:, 3*j:3*j + 3])
+            temp = traj_proj(temp, vec)
+            msds = msd_fft(temp.reshape(len(temp), 1))
+            msd_df[:, j] = msds
+
+        ave_msd = msd_df.mean(axis=1)[1000:]
+        
+        linear_model=np.polyfit(t/1000, ave_msd, 1)
+        ave_D[i] = linear_model[0]/20000
+        update_progress(i / len(vecs))
+    update_progress(1)
+    return vecs, ave_D

@@ -50,15 +50,15 @@ fishmol
 
 
 ## Usage
-Please refer to examples for usage.
-  - [I/O of trajectory files in `xyz` format](https://github.com/Lei-Lei-alpha/fishmol/blob/master/examples/trajectory_IO.ipynb)
+Please refer to docs for usage.
+  - [I/O of trajectory files in `xyz` format](https://lei-lei-alpha.github.io/fishmol/trajectory_IO.html)
     - calibration of the trajectory file by fixing the centre of mass
     - Simple view function
     - Simple manipulate of trajectory: filter, select etc
-  - Calculation of mean square displacement (MSD) and diffusion coefficient
-  - the anisotropy of diffusion by calculating the projection of MSD and diffusion coefficient along specified directions
-  - hydrogen bond recognition and lifetime analysis
-  - the reorientation lifetime of vectors
+  - [Calculation of mean square displacement (MSD) and diffusion coefficient](https://lei-lei-alpha.github.io/fishmol/MSD_diff_coeff.html)
+  - [the anisotropy of diffusion by calculating the projection of MSD and diffusion coefficient along specified directions](https://lei-lei-alpha.github.io/fishmol/diff_aniso.html)
+  - [hydrogen bond recognition and lifetime analysis](https://lei-lei-alpha.github.io/fishmol/H_bond.html)
+  - [the reorientation lifetime of vectors](https://lei-lei-alpha.github.io/fishmol/VRD.html)
   - the distribution function of a range of scalars (including the radial distribution function, angular distribution function, dihedral angle distribution function)
   - 2D combined distribution functions
   - Van Hove correlation function
