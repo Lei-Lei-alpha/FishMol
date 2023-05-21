@@ -138,13 +138,12 @@ class Atom(np.ndarray):
         """
         if mic:
             a2b = other.to_crys().pos - self.to_crys().pos
-            for i in range(3):
-                a2b[i] = a2b[i] - round(a2b[i])
+            a2b -= np.round(a2b)
             a2b = xys2cart(a2b, self.cell)
             return np.sqrt(np.dot(a2b, a2b))
         else:
             a2b = other.to_cart().pos - self.to_cart().pos
-            return np.sqrt(np.dot(a2b, a2b))
+            return np.linalg.norm(a2b)
 
 class Atoms(np.ndarray):
     """
@@ -371,8 +370,7 @@ class Atoms(np.ndarray):
         if mic:
             a2b = self.pos[b] - self.pos[a]
             a2b = cart2xys(a2b, self.cell)
-            for i in range(3):
-                a2b[i] = a2b[i] - round(a2b[i])
+            a2b -= np.round(a2b)
             a2b = xys2cart(a2b, self.cell)
         else:
             a2b = self.pos[b] - self.pos[a]
